@@ -9,7 +9,17 @@ html,body{
 .course-container{
   background-color:skyblue;
   width: 100%;
-  height: 100%;
+  height: 80%;
+  margin:0;
+  padding:0;
+}
+
+.tool-container{
+  display:grid;
+  grid-template-columns: 25% 25% 25% 25%;
+  background-color:pink;
+  width: 100%;
+  height: 20%;
   margin:0;
   padding:0;
 }
