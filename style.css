@@ -17,7 +17,7 @@ html,body{
 }
 
 .tool-container{
-  height: 100px;
+  height: 25px;
   display: grid;
   grid-template-areas: "a a a a";
   gap: 0px;
