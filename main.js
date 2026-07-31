@@ -126,8 +126,8 @@ function handleMove(e) {
     let newCy = currentCy + dy;
 
     // --- BOUNDING LOGIC ---
-    const minX = r;
-    const maxX = 40 - r;
+    const minX =  r;
+    const maxX = 60 - r;
     if (newCx < minX) newCx = minX;
     if (newCx > maxX) newCx = maxX;
 
