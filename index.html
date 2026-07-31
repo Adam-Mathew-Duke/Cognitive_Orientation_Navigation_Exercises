@@ -7,7 +7,7 @@ Description: Mobile first skating and layout testing
 <!-- HTML -->
 <!doctype html>
 <html lang="en">
-    
+
     <!-- HEAD -->
     <head>
         <meta charset="UTF-8">
@@ -19,47 +19,31 @@ Description: Mobile first skating and layout testing
 
     <!-- BODY -->
     <body>
-    
+
         <!-- MAIN MENU BACKDROP -->
         <div class="modal-backdrop" id="menu-backdrop">
-        
+
             <!-- MAIN MENU -->
             <div class="main-menu-container">
 
                 <!-- MAIN MENU CONTENTS -->
-                <div>
-                    <button class="button">ADD CONE</button>
-                </div>
-                <div>
-                    <button class="button">ADD PATH</button>
-                </div>
-                <div>
-                    <button class="button">ADD SYMBOL</button>
-                </div>
-                <div>
-                    <button class="button">ADD NOTES</button>
-                </div>
-                <div>
-                    <button class="button">SAVE COURSE</button>
-                </div>
-                <div>
-                    <button class="button">CLEAR COURSE</button>
-                </div>
-                <div>
-                    <button class="button" id="close-menu-btn">CLOSE MENU</button>
-                </div>
+                <div><button class="button">ADD CONE</button></div>
+                <div><button class="button">ADD PATH</button></div>
+                <div><button class="button">ADD SYMBOL</button></div>
+                <div><button class="button">ADD NOTES</button></div>
+                <div><button class="button">SAVE COURSE</button></div>
+                <div><button class="button">CLEAR COURSE</button></div>
+                <div><button class="button" id="close-menu-btn">CLOSE MENU</button></div>
             </div>
         </div>
         
         <!-- COURSE SECTION -->
         <div class="course-container">
-
             <!-- DRAGGABLE CONE -->
             <svg viewBox="0 0 40 80" xmlns="http://www.w3.org/2000/svg">
                 <circle id="draggable-cone" cx="10" cy="10" r="3" fill="green"/>
             </svg>
         </div>
-
         <!-- MAIN MENU SECTION -->
         <div class="center-tools">
             <div class="tool-container">
@@ -67,7 +51,6 @@ Description: Mobile first skating and layout testing
                 <button class="button" id="open-menu-btn">MENU</button>
             </div>
         </div>
-
         <!-- MAIN JS -->
         <script src="main.js"></script>
     </body>
