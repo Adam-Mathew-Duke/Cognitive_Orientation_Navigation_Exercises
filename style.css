@@ -39,4 +39,40 @@ body{
 .button{
   width:100%;
   height:100%;
+  background-color: pink;
+  padding:10px;
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+}
+
+.main-menu-container {
+  background-color: pink;
+    border: 0.5rem outset black;
+  width: 100%;
+  max-width: 350px;
+  height: 40vh;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+  z-index: 999;
+}
+
+.modal-backdrop.show {
+  display: flex;
 }
