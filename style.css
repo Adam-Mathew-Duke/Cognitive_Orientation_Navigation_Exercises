@@ -5,6 +5,7 @@ body{
   min-width: 100vw;
   margin-left:auto;
   margin-right:auto;
+  padding:0;
 }
 
 .course-container {
@@ -13,7 +14,7 @@ body{
   max-width: 400px;
   min-height: 90vh;
   height: 100vh;
-  max-height: 600px;
+  max-height: 500px;
   margin: auto;
   padding: 0;
   display: flex;
@@ -26,7 +27,7 @@ body{
   grid-template-areas:"a";
   gap:0px;
   grid-auto-columns:auto;
-  grid-template-columns:repeat(auto-fit,minmax(100%,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(100%,1fr));  
 }
 
 .center-tools{
