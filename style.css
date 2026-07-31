@@ -13,16 +13,14 @@ html,body{
   height: 80%;
   margin:0;
   padding:0;
-
 }
 
 .tool-container{
-  height: 25px;
   display: grid;
   grid-template-areas: "a a a a";
   gap: 0px;
-  grid-auto-columns: 50px;
-  grid-template-columns: repeat(auto-fit, minmax(10px, 1fr));
+  grid-auto-columns: 20%;
+  grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
 }
 
 .center-tools{
