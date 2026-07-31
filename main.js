@@ -82,3 +82,73 @@ window.addEventListener('mousemove', (e) => {
 window.addEventListener('mouseup', () => {
     isDragging = false;
 });
+
+// --- TOUCH START / MOUSE DOWN ---
+// (Make sure you also add 'touchstart' to your start listener)
+circle.addEventListener('touchstart', (e) => {
+    isDragging = true;
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    e.preventDefault(); // Prevents page scrolling while dragging
+});
+
+// --- TOUCH MOVE / MOUSE MOVE ---
+window.addEventListener('mousemove', handleMove);
+window.addEventListener('touchmove', handleMove, { passive: false });
+
+function handleMove(e) {
+    if (!isDragging) return;
+
+    // Get clientX/Y depending on whether it's a touch or mouse event
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    let pt = svg.createSVGPoint();
+    pt.x = clientX;
+    pt.y = clientY;
+    
+    let startPt = svg.createSVGPoint();
+    startPt.x = startX;
+    startPt.y = startY;
+
+    let cursorPoint = pt.matrixTransform(svg.getScreenCTM().inverse());
+    let startPoint = startPt.matrixTransform(svg.getScreenCTM().inverse());
+
+    const dx = cursorPoint.x - startPoint.x;
+    const dy = cursorPoint.y - startPoint.y;
+
+    let currentCx = parseFloat(circle.getAttribute('cx')) || 0;
+    let currentCy = parseFloat(circle.getAttribute('cy')) || 0;
+    let r = parseFloat(circle.getAttribute('r')) || 0;
+
+    // Calculate new positions
+    let newCx = currentCx + dx;
+    let newCy = currentCy + dy;
+
+    // --- BOUNDING LOGIC ---
+    const minX = r;
+    const maxX = 40 - r;
+    if (newCx < minX) newCx = minX;
+    if (newCx > maxX) newCx = maxX;
+
+    const minY = 2 + r;
+    const maxY = 78 - r;
+    if (newCy < minY) newCy = minY;
+    if (newCy > maxY) newCy = maxY;
+    // ----------------------
+
+    circle.setAttribute('cx', newCx);
+    circle.setAttribute('cy', newCy);
+
+    startX = clientX;
+    startY = clientY;
+    
+    // Prevent default scrolling behavior on touch devices
+    if (e.type === 'touchmove') {
+        e.preventDefault();
+    }
+}
+
+// --- TOUCH END / MOUSE UP ---
+window.addEventListener('mouseup', () => { isDragging = false; });
+window.addEventListener('touchend', () => { isDragging = false; });
