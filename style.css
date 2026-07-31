@@ -12,9 +12,8 @@ body{
   background-color: skyblue;
   width: 100%;
   max-width: 400px;
-  min-height: 90vh;
-  height: 100vh;
   max-height: 500px;
+  height: 100vh;
   margin: auto;
   padding: 0;
   display: flex;
