@@ -33,7 +33,7 @@ body{
   margin-right:auto;
   padding-left:5px;
   padding-right:5px;
-  max-width:50px;
+  max-width:150px;
 }
 
 .button{
@@ -45,17 +45,16 @@ body{
 }
 
 .main-menu-container {
-  background-color: pink;
-  padding: 0;
+  background-color: black;
+  padding: 5px;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
   position: fixed;
-  top: 10%;
+  top: 30%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1000;
-  max-width:200px;
 }
 
 .modal-backdrop {
