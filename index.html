@@ -1,25 +1,15 @@
 <!doctype html>
 <html lang="en">
-
-    <!-- HEAD -->
     <head>
         <meta charset="UTF-8">
         <link rel="shortcut icon" href="#">
         <link rel="stylesheet" href="style.css"> 
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Inline Skating Cone Project</title>
-    </head>
-
-    <!-- BODY -->
+        <title>Cognitive Orientation Navigation Exercises</title>
+    </head> 
     <body>
-
-        <!-- MAIN MENU BACKDROP -->
         <div class="modal-backdrop" id="menu-backdrop">
-
-            <!-- MAIN MENU -->
             <div class="main-menu-container">
-
-                <!-- MAIN MENU CONTENTS -->
                 <div><button class="button-main-menu" id="add-cone">Add Cone</button></div>
                 <div><button class="button-main-menu" id="add-path">Add Path</button></div>
                 <div><button class="button-main-menu">Course Notes</button></div>
@@ -28,16 +18,11 @@
                 <div><button class="button-main-menu" id="close-menu-btn">Close Menu</button></div>
             </div>
         </div>
-
-<!-- COURSE SECTION -->
-    <div class="course-container">
-        <svg id="course-svg" viewBox="0 0 40 80" xmlns="http://www.w3.org/2000/svg">
-            <!-- Container to hold multiple independent paths (placed before cones so lines stay underneath) -->
-            <g id="paths-container"></g>
-        </svg>
-    </div>
-
-        <!-- MAIN MENU SECTION -->
+        <div class="course-container">
+            <svg id="course-svg" viewBox="0 0 40 80" xmlns="http://www.w3.org/2000/svg">
+                <g id="paths-container"></g>
+            </svg>
+        </div>
         <div class="center-tools">
             <div class="tool-container">
                 <div>
@@ -45,8 +30,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- MAIN JS -->
         <script src="main.js"></script>
     </body>
 </html>

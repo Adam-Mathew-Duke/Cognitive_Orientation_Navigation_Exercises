@@ -42,7 +42,7 @@ body{
   height:100%;
   background-color: pink;
   user-select: none;
-  -webkit-user-select: none; /* Safari */
+  -webkit-user-select: none;
 }
 
 .button-main-menu{
@@ -73,7 +73,7 @@ body{
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
 }
 
@@ -82,5 +82,5 @@ body{
 }
 
 svg {
-    touch-action: none; 
+  touch-action: none; 
 }
