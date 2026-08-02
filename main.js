@@ -172,14 +172,27 @@ toggleOrientation.addEventListener('click', () => {
     if (container.classList.contains('course-container-landscape')) {
         container.classList.replace('course-container-landscape', 'course-container-potrait');
         toggleOrientation.textContent = "Switch to landscape";
-        //mainMenuContainer.style.backgroundColor = "blue";
-        mainMenuContainer.style.top = "30%"; 
+        mainMenuContainer.style.backgroundColor = "blue";
+        mainMenuContainer.style.top = "50%"; 
     } else {
         container.classList.replace('course-container-potrait', 'course-container-landscape');
         toggleOrientation.textContent = "Switch to potrait";
-        //mainMenuContainer.style.backgroundColor = "green"; 
-        mainMenuContainer.style.top = "15%"; 
+        mainMenuContainer.style.backgroundColor = "green"; 
+        mainMenuContainer.style.top = "40%"; 
     }
     backdrop.classList.remove('show');
 });
 // end toggle app orientation between potrait and landscape
+
+// notes menu
+const closeNotesButton = document.getElementById('close-notes-menu');
+const notesdrop = document.getElementById('notes-backdrop');
+closeNotesButton.addEventListener('click', () => notesdrop.classList.remove('show'));
+// end notes menu
+
+// Open the notes menu from the main menu button
+const openNotes = document.getElementById('open-notes-button');
+openNotes.addEventListener('click', () => {
+    notesdrop.classList.add('show');
+    backdrop.classList.remove('show');
+});
