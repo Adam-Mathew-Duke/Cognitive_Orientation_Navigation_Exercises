@@ -45,7 +45,7 @@ html,body{
 }
 
 .toolbar-main-menu-button{
-  font-size:8px;
+  font-size:6px;
   width:100%;
   height:100%;
   background-color:pink;
@@ -97,7 +97,7 @@ html,body{
 }
 
 .button-main-menu{
-  font-size:10px;
+  font-size:6px;
   padding:0px0px;
   width:100%;
   box-sizing:border-box;
