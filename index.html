@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
     <head>
         <meta charset="UTF-8">
         <link rel="shortcut icon" href="#">
@@ -7,29 +8,38 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Cognitive Orientation Navigation Exercises</title>
     </head> 
+
     <body>
+
+        <!-- Main menu and dark background effect -->
         <div class="modal-backdrop" id="menu-backdrop">
             <div class="main-menu-container">
                 <div><button class="button-main-menu" id="add-cone">Add Cone</button></div>
                 <div><button class="button-main-menu" id="add-path">Add Path</button></div>
+                <div><button class="button-main-menu" id="add-icon">Add Icon</button></div>
+                <div><button class="button-main-menu" id="toggle-orientation-button">Switch to landscape</button></div>
                 <div><button class="button-main-menu">Course Notes</button></div>
                 <div><button class="button-main-menu">Save Course</button></div>
                 <div><button class="button-main-menu" id="clear-course">Clear Course</button></div>
                 <div><button class="button-main-menu" id="close-menu-btn">Close Menu</button></div>
             </div>
         </div>
-        <div class="course-container">
+
+        <!-- Cone course -->
+        <div id="course-container" class="course-container-potrait">
             <svg id="course-svg" viewBox="0 0 40 80" xmlns="http://www.w3.org/2000/svg">
                 <g id="paths-container"></g>
             </svg>
         </div>
-        <div class="center-tools">
-            <div class="tool-container">
-                <div>
-                    <button class="button" id="open-menu-btn">Menu</button>
-                </div>
+
+        <!-- Bottom toolbar -->
+        <div class="tool-container">
+            <div>
+                <button class="toolbar-main-menu-button" id="open-menu-btn">Menu</button>
             </div>
         </div>
+
+        <!-- Main Javascript -->
         <script src="main.js"></script>
     </body>
 </html>

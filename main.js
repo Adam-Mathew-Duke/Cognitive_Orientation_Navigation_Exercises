@@ -162,3 +162,24 @@ window.addEventListener('touchmove', handleMove, { passive: false });
 window.addEventListener('mouseup', () => { isDragging = false; activeGroup = null; });
 window.addEventListener('touchend', () => { isDragging = false; activeGroup = null; });
 // end mouse and touch listeners
+
+// Toggle app orientation between potrait and landscape
+const toggleOrientation = document.getElementById('toggle-orientation-button');
+const container = document.getElementById('course-container');
+const mainMenuContainer = document.querySelector('.main-menu-container');
+
+toggleOrientation.addEventListener('click', () => {
+    if (container.classList.contains('course-container-landscape')) {
+        container.classList.replace('course-container-landscape', 'course-container-potrait');
+        toggleOrientation.textContent = "Switch to landscape";
+        //mainMenuContainer.style.backgroundColor = "blue";
+        mainMenuContainer.style.top = "30%"; 
+    } else {
+        container.classList.replace('course-container-potrait', 'course-container-landscape');
+        toggleOrientation.textContent = "Switch to potrait";
+        //mainMenuContainer.style.backgroundColor = "green"; 
+        mainMenuContainer.style.top = "15%"; 
+    }
+    backdrop.classList.remove('show');
+});
+// end toggle app orientation between potrait and landscape
