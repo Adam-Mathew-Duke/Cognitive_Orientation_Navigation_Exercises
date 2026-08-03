@@ -11,7 +11,7 @@ html,body{
 .course-container {
   background-color: lightgray;
   width: 100%;
-  max-width: 140px; /* Reduced from 180px to make it smaller overall */
+  max-width: 100px; /* Reduced from 180px to make it smaller overall */
   margin: auto;
   display: flex;
   flex-direction: column;
