@@ -1,6 +1,6 @@
 html,body{
   background-color:blue;
-  height:80vh;
+  height:90vh;
   width:90vw;
   margin-left:auto;
   margin-right:auto;
@@ -10,7 +10,8 @@ html,body{
 .course-container {
   background-color: lightgray;
   width: 100%;
-  max-width: 200px;
+  max-width: 180px;
+  max-height: 400px;
   margin: auto;
   display: flex;
   flex-direction: column;
