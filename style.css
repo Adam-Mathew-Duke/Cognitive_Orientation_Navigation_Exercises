@@ -11,7 +11,7 @@ html,body{
   background-color: lightgray;
   width: 100%;
   max-width: 180px;
-  max-height: 400px;
+  max-height: 350px;
   margin: auto;
   display: flex;
   flex-direction: column;
