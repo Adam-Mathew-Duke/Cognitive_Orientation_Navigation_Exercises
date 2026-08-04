@@ -73,8 +73,9 @@ addPathBtn.addEventListener('click', () => {
 
 // clear course button
 clearBtn.addEventListener('click', () => {
-    const cones = svg.querySelectorAll('.draggable-cone');
-    cones.forEach(cone => cone.remove());
+    // Clear both cones and icons
+    const items = svg.querySelectorAll('.draggable-cone, .draggable-icon');
+    items.forEach(item => item.remove());
     if (pathsContainer) pathsContainer.innerHTML = '';
         currentPathPoints = [];
         currentPathElement = null;
@@ -87,7 +88,7 @@ clearBtn.addEventListener('click', () => {
 // draw path svg
 svg.addEventListener('click', (e) => {
     if (!isDrawingMode || !currentPathElement) return;
-    if (e.target.closest('.draggable-cone')) return;
+    if (e.target.closest('.draggable-cone, .draggable-icon')) return;
         let pt = svg.createSVGPoint();
         pt.x = e.clientX;
         pt.y = e.clientY;
@@ -106,7 +107,8 @@ window.addEventListener('touchstart', (e) => startDrag(e), { passive: false });
 
 // touch and drag function
 function startDrag(e) {
-    const targetGroup = e.target.closest('.draggable-cone');
+    // Target both draggable cones and icons
+    const targetGroup = e.target.closest('.draggable-cone, .draggable-icon');
     if (!targetGroup) return;
     isDragging = true;
     activeGroup = targetGroup;
@@ -139,15 +141,32 @@ function handleMove(e) {
         let currentTranslateY = match ? parseFloat(match[2]) : 0;
         let currentX = 10 + currentTranslateX + dx;
         let currentY = 10 + currentTranslateY + dy;
+
+    // Separate boundaries for icons vs cones
+    let minX, maxX, minY, maxY;
+    if (activeGroup.classList.contains('draggable-icon')) {
+       
+        // Adjust these numbers to change how close icons can get to the edges
+        const iconPadding = 2; 
+// Customize each edge individually here!
+        minX = 0 + iconPadding;   // Very close to the left border
+        maxX = 37;  // Right border limit
+        minY = 2;   // Top border limit
+        maxY = 78;  // Bottom border limit
+    } else {
+        // Default cone boundaries
         const r = 4;
-        const minX = 1 + r;
-        const maxX = 39 - r;
+        minX = 1 + r;
+        maxX = 39 - r;
+        minY = 1 + r;
+        maxY = 79 - r;
+    }
+
     if (currentX < minX) currentX = minX;
     if (currentX > maxX) currentX = maxX;
-    const minY = 1 + r;
-    const maxY = 79 - r;
     if (currentY < minY) currentY = minY;
     if (currentY > maxY) currentY = maxY;
+
     let newTranslateX = currentX - 10;
     let newTranslateY = currentY - 10;
     activeGroup.setAttribute('transform', `translate(${newTranslateX}, ${newTranslateY})`);
@@ -175,3 +194,28 @@ openNotes.addEventListener('click', () => {
     notesdrop.classList.add('show');
     backdrop.classList.remove('show');
 });
+
+// add up arrow icon (max of 8)
+const addIcon = document.getElementById('add-icon');
+addIcon.addEventListener('click', () => {
+        isDrawingMode = false;
+        const existingIcons = svg.querySelectorAll('.draggable-icon');
+        if (existingIcons.length >= 8) {
+            alert("Maximum limit of 8 icons reached!");
+            return;
+    }
+
+    const newGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    newGroup.setAttribute('class', 'draggable-icon');
+    newGroup.setAttribute('transform', 'translate(10, 30)');
+
+    // Add your custom path icon (no circle)
+    const iconPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    iconPath.setAttribute('d', 'M12 10L9 13H10.5V15H13.5V13H15L12 10Z');
+    iconPath.setAttribute('fill', 'green');
+    newGroup.appendChild(iconPath);
+
+    // Append the completed group to the SVG
+    svg.appendChild(newGroup);
+    backdrop.classList.remove('show');
+}); // end add icons button listener
