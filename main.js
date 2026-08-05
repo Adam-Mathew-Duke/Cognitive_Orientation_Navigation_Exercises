@@ -24,11 +24,11 @@ backdrop.addEventListener('click', (event) => {
 
 // add cone button
 addConeBtn.addEventListener('click', () => {
-        isDrawingMode = false;
-        const existingCones = svg.querySelectorAll('.draggable-cone');
-        if (existingCones.length >= 8) {
-            alert("Maximum limit of 8 cones reached!");
-            return;
+    isDrawingMode = false;
+    const existingCones = svg.querySelectorAll('.draggable-cone');
+    if (existingCones.length >= 8) {
+        alert("Maximum limit of 8 cones reached!");
+        return;
     }
 
     const newGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -77,24 +77,29 @@ clearBtn.addEventListener('click', () => {
     const items = svg.querySelectorAll('.draggable-cone, .draggable-icon');
     items.forEach(item => item.remove());
     if (pathsContainer) pathsContainer.innerHTML = '';
-        currentPathPoints = [];
-        currentPathElement = null;
-        isDrawingMode = false;
-        addPathBtn.style.background = "";
-        addPathBtn.textContent = "Add Path";
-        backdrop.classList.remove('show');
+    currentPathPoints = [];
+    currentPathElement = null;
+    isDrawingMode = false;
+    addPathBtn.style.background = "";
+    addPathBtn.textContent = "Add Path";
+    
+    // Clear notes textarea via ID 'notes-box'
+    const notesInput = document.getElementById('notes-box');
+    if (notesInput) notesInput.value = '';
+
+    backdrop.classList.remove('show');
 }); // end clear course button
 
 // draw path svg
 svg.addEventListener('click', (e) => {
     if (!isDrawingMode || !currentPathElement) return;
     if (e.target.closest('.draggable-cone, .draggable-icon')) return;
-        let pt = svg.createSVGPoint();
-        pt.x = e.clientX;
-        pt.y = e.clientY;
-        let svgPoint = pt.matrixTransform(svg.getScreenCTM().inverse());
-        currentPathPoints.push(`${svgPoint.x},${svgPoint.y}`);
-        currentPathElement.setAttribute('points', currentPathPoints.join(' '));
+    let pt = svg.createSVGPoint();
+    pt.x = e.clientX;
+    pt.y = e.clientY;
+    let svgPoint = pt.matrixTransform(svg.getScreenCTM().inverse());
+    currentPathPoints.push(`${svgPoint.x},${svgPoint.y}`);
+    currentPathElement.setAttribute('points', currentPathPoints.join(' '));
 }); // end draw path svg
 
 // touch and mouse listeners
@@ -123,44 +128,34 @@ function startDrag(e) {
 // move and drag function
 function handleMove(e) {
     if (!isDragging || !activeGroup) return;
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        let pt = svg.createSVGPoint();
-        pt.x = clientX;
-        pt.y = clientY;
-        let startPt = svg.createSVGPoint();
-        startPt.x = startX;
-        startPt.y = startY;
-        let cursorPoint = pt.matrixTransform(svg.getScreenCTM().inverse());
-        let startPoint = startPt.matrixTransform(svg.getScreenCTM().inverse());
-        const dx = cursorPoint.x - startPoint.x;
-        const dy = cursorPoint.y - startPoint.y;
-        let currentTransform = activeGroup.getAttribute('transform') || 'translate(0,0)';
-        let match = /translate\(([^,]+),\s*([^\)]+)\)/.exec(currentTransform);
-        let currentTranslateX = match ? parseFloat(match[1]) : 0;
-        let currentTranslateY = match ? parseFloat(match[2]) : 0;
-        let currentX = 10 + currentTranslateX + dx;
-        let currentY = 10 + currentTranslateY + dy;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    let pt = svg.createSVGPoint();
+    pt.x = clientX;
+    pt.y = clientY;
+    let startPt = svg.createSVGPoint();
+    startPt.x = startX;
+    startPt.y = startY;
+    let cursorPoint = pt.matrixTransform(svg.getScreenCTM().inverse());
+    let startPoint = startPt.matrixTransform(svg.getScreenCTM().inverse());
+    const dx = cursorPoint.x - startPoint.x;
+    const dy = cursorPoint.y - startPoint.y;
+    let currentTransform = activeGroup.getAttribute('transform') || 'translate(0,0)';
+    let match = /translate\(([^,]+),\s*([^\)]+)\)/.exec(currentTransform);
+    let currentTranslateX = match ? parseFloat(match[1]) : 0;
+    let currentTranslateY = match ? parseFloat(match[2]) : 0;
+    let currentX = 10 + currentTranslateX + dx;
+    let currentY = 10 + currentTranslateY + dy;
 
     // Separate boundaries for icons vs cones
     let minX, maxX, minY, maxY;
-    if (activeGroup.classList.contains('draggable-icon')) {
-       
-        // Adjust these numbers to change how close icons can get to the edges
-        const iconPadding = 2; 
-// Customize each edge individually here!
-        minX = 0 + iconPadding;   // Very close to the left border
-        maxX = 37;  // Right border limit
-        minY = 2;   // Top border limit
-        maxY = 78;  // Bottom border limit
-    } else {
-        // Default cone boundaries
-        const r = 4;
-        minX = 1 + r;
-        maxX = 39 - r;
-        minY = 1 + r;
-        maxY = 79 - r;
-    }
+   
+    // Default cone boundaries
+    const r = 4;
+    minX = 1 + r;
+    maxX = 39 - r;
+    minY = 1 + r;
+    maxY = 79 - r;
 
     if (currentX < minX) currentX = minX;
     if (currentX > maxX) currentX = maxX;
@@ -195,27 +190,122 @@ openNotes.addEventListener('click', () => {
     backdrop.classList.remove('show');
 });
 
-// add up arrow icon (max of 8)
-const addIcon = document.getElementById('add-icon');
-addIcon.addEventListener('click', () => {
-        isDrawingMode = false;
-        const existingIcons = svg.querySelectorAll('.draggable-icon');
-        if (existingIcons.length >= 8) {
-            alert("Maximum limit of 8 icons reached!");
-            return;
+// 1. Grab your save button from the HTML
+const saveCourseBtn = document.getElementById('save-course');
+
+// 2. Add the click listener (Saves Cones, Paths, and Notes)
+saveCourseBtn.addEventListener('click', () => {
+    // Gather Cones data
+    const cones = document.querySelectorAll('.draggable-cone');
+    const coneData = [];
+
+    cones.forEach(cone => {
+        const transform = cone.getAttribute('transform');
+        const match = /translate\(([^,]+),\s*([^\)]+)\)/.exec(transform);
+        
+        if (match) {
+            coneData.push({
+                x: parseFloat(match[1]),
+                y: parseFloat(match[2])
+            });
+        }
+    });
+
+    // Gather Paths data
+    const paths = pathsContainer ? pathsContainer.querySelectorAll('polyline') : [];
+    const pathData = [];
+
+    paths.forEach(path => {
+        const points = path.getAttribute('points');
+        if (points) {
+            pathData.push(points);
+        }
+    });
+
+    // Gather Notes data (Targeting the textarea via ID 'notes-box')
+    const notesInput = document.getElementById('notes-box');
+    const notesData = notesInput ? notesInput.value : '';
+
+    // Update the browser URL with all parameters
+    const url = new URL(window.location.href);
+    url.searchParams.set('cones', JSON.stringify(coneData));
+    url.searchParams.set('paths', JSON.stringify(pathData));
+    if (notesData) {
+        url.searchParams.set('notes', notesData);
+    } else {
+        url.searchParams.delete('notes');
     }
+    
+    window.history.replaceState({}, '', url);
 
-    const newGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-    newGroup.setAttribute('class', 'draggable-icon');
-    newGroup.setAttribute('transform', 'translate(10, 30)');
+    // Copy the shareable link to the clipboard
+    navigator.clipboard.writeText(url.toString());
+    alert("Course and notes saved! Shareable URL copied to clipboard.");
+});
 
-    // Add your custom path icon (no circle)
-    const iconPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    iconPath.setAttribute('d', 'M12 10L9 13H10.5V15H13.5V13H15L12 10Z');
-    iconPath.setAttribute('fill', 'green');
-    newGroup.appendChild(iconPath);
+// Function that reads the URL and recreates Cones, Paths, and Notes
+function loadCourseFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    const coneParam = params.get('cones');
+    const pathParam = params.get('paths');
+    const notesParam = params.get('notes');
 
-    // Append the completed group to the SVG
-    svg.appendChild(newGroup);
-    backdrop.classList.remove('show');
-}); // end add icons button listener
+    if (!coneParam && !pathParam && !notesParam) return;
+
+    try {
+        // Recreate Cones
+        if (coneParam) {
+            const coneData = JSON.parse(coneParam);
+            coneData.forEach(data => {
+                const newGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                newGroup.setAttribute('class', 'draggable-cone');
+                newGroup.setAttribute('transform', `translate(${data.x}, ${data.y})`);
+
+                const outerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                outerCircle.setAttribute('cx', '10');
+                outerCircle.setAttribute('cy', '10');
+                outerCircle.setAttribute('r', '4');
+                outerCircle.setAttribute('fill', 'rgba(0,0,0,0.1)');
+
+                const innerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                innerCircle.setAttribute('cx', '10');
+                innerCircle.setAttribute('cy', '10');
+                innerCircle.setAttribute('r', '2');
+                innerCircle.setAttribute('fill', 'yellow');
+
+                newGroup.appendChild(outerCircle);
+                newGroup.appendChild(innerCircle);
+                svg.appendChild(newGroup);
+            });
+        }
+
+        // Recreate Paths
+        if (pathParam && pathsContainer) {
+            const pathData = JSON.parse(pathParam);
+            pathData.forEach(points => {
+                const pathElement = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+                pathElement.setAttribute('fill', 'none');
+                pathElement.setAttribute('stroke', 'yellow');
+                pathElement.setAttribute('stroke-width', '1.5');
+                pathElement.setAttribute('stroke-dasharray', '2,2');
+                pathElement.setAttribute('points', points);
+                pathsContainer.appendChild(pathElement);
+            });
+        }
+
+        // Load Notes into textarea field
+        if (notesParam) {
+            const notesInput = document.getElementById('notes-box');
+            if (notesInput) {
+                notesInput.value = notesParam;
+            }
+        }
+        
+        console.log("Course and notes loaded successfully from URL!");
+    } catch (e) {
+        console.error("Could not parse course data from URL:", e);
+    }
+}
+
+// Automatically trigger loading the moment the page loads
+window.addEventListener('DOMContentLoaded', loadCourseFromURL);
