@@ -4,6 +4,7 @@ const closeBtn = document.getElementById('close-menu-btn');
 const backdrop = document.getElementById('menu-backdrop');
 const addConeBtn = document.getElementById('add-cone');
 const addPathBtn = document.getElementById('add-path');
+const undoBtn = document.getElementById('undo-action');
 const clearBtn = document.getElementById('clear-course');
 const svg = document.getElementById('course-svg');
 const pathsContainer = document.getElementById('paths-container');
@@ -11,20 +12,44 @@ let currentPathElement = null;
 let currentPathPoints = [];
 let isDrawingMode = false;
 
+// Undo Stack History
+let undoStack = [];
+
+function pushState() {
+    const notesInput = document.getElementById('notes-box');
+    const currentState = {
+        svgContent: svg.innerHTML,
+        pathsContent: pathsContainer ? pathsContainer.innerHTML : '',
+        notesValue: notesInput ? notesInput.value : ''
+    };
+    undoStack.push(currentState);
+}
+
 // add the menu effect when the open menu button is pressed
 openBtn.addEventListener('click', () => backdrop.classList.add('show'));
 
-// remote the menu effect when the menu close button is pressed
+// remove the menu effect when the menu close button is pressed
 closeBtn.addEventListener('click', () => backdrop.classList.remove('show'));
 
 // remove the backdrop menu effect when the menu is closed
 backdrop.addEventListener('click', (event) => {
     if (event.target === backdrop) backdrop.classList.remove('show');
-}); // end backdrop listener
+});
 
 // add cone button
 addConeBtn.addEventListener('click', () => {
+    pushState(); // Save state before adding cone
+    
+    // Reset drawing mode completely
     isDrawingMode = false;
+    if (currentPathElement) {
+        currentPathElement.remove();
+        currentPathElement = null;
+    }
+    currentPathPoints = [];
+    addPathBtn.style.background = "";
+    addPathBtn.textContent = "Add Path";
+
     const existingCones = svg.querySelectorAll('.draggable-cone');
     if (existingCones.length >= 8) {
         alert("Maximum limit of 8 cones reached!");
@@ -48,12 +73,15 @@ addConeBtn.addEventListener('click', () => {
     newGroup.appendChild(innerCircle);
     svg.appendChild(newGroup);
     backdrop.classList.remove('show');
-}); // end add cone button listener
+});
 
 // add path button
 addPathBtn.addEventListener('click', () => {
-    isDrawingMode = !isDrawingMode;
-    if (isDrawingMode) {
+    if (!isDrawingMode) {
+        // START DRAWING: Push the clean state *before* starting the new path line
+        pushState();
+        
+        isDrawingMode = true;
         addPathBtn.style.background = "rgba(255, 255, 255, 0.3)";
         addPathBtn.textContent = "Finish Path";
         currentPathPoints = [];
@@ -64,16 +92,69 @@ addPathBtn.addEventListener('click', () => {
         currentPathElement.setAttribute('stroke-dasharray', '2,2');
         pathsContainer.appendChild(currentPathElement);
     } else {
+        // FINISH DRAWING: If user clicks finish without drawing points, pop the unnecessary state we just pushed
+        if (currentPathPoints.length === 0) {
+            if (currentPathElement) {
+                currentPathElement.remove();
+            }
+            undoStack.pop(); // Remove the state we pushed since nothing was actually added
+        }
+        
+        isDrawingMode = false;
         addPathBtn.style.background = "";
         addPathBtn.textContent = "Add Path";
         currentPathElement = null;
+        currentPathPoints = [];
     }
     backdrop.classList.remove('show');
-}); // end add path button
+});
+
+// undo button listener
+if (undoBtn) {
+    undoBtn.addEventListener('click', () => {
+        if (undoStack.length === 0) {
+            alert("Nothing to undo!");
+            return;
+        }
+        
+        // Clean up any active drawing elements first
+        if (currentPathElement) {
+            currentPathElement.remove();
+        }
+        
+        const previousState = undoStack.pop();
+        
+        svg.innerHTML = previousState.svgContent;
+        if (pathsContainer) {
+            pathsContainer.innerHTML = previousState.pathsContent;
+        }
+        
+        const notesInput = document.getElementById('notes-box');
+        if (notesInput) {
+            notesInput.value = previousState.notesValue;
+        }
+        
+        // Fully reset drawing mode variables
+        isDrawingMode = false;
+        currentPathElement = null;
+        currentPathPoints = [];
+        if (addPathBtn) {
+            addPathBtn.style.background = "";
+            addPathBtn.textContent = "Add Path";
+        }
+        
+        backdrop.classList.remove('show');
+    });
+}
 
 // clear course button
 clearBtn.addEventListener('click', () => {
-    // Clear both cones and icons
+    pushState(); 
+    
+    if (currentPathElement) {
+        currentPathElement.remove();
+    }
+    
     const items = svg.querySelectorAll('.draggable-cone, .draggable-icon');
     items.forEach(item => item.remove());
     if (pathsContainer) pathsContainer.innerHTML = '';
@@ -83,24 +164,40 @@ clearBtn.addEventListener('click', () => {
     addPathBtn.style.background = "";
     addPathBtn.textContent = "Add Path";
     
-    // Clear notes textarea via ID 'notes-box'
     const notesInput = document.getElementById('notes-box');
     if (notesInput) notesInput.value = '';
 
     backdrop.classList.remove('show');
-}); // end clear course button
+});
 
-// draw path svg
+// draw path svg - FIXED: Re-binds pathsContainer reference incase it was wiped by innerHTML undo
 svg.addEventListener('click', (e) => {
+    // If we are in drawing mode, but currentPathElement got detached or lost during an undo, recreate it dynamically!
+    if (isDrawingMode && (!currentPathElement || !currentPathElement.isConnected)) {
+        let activePathsContainer = document.getElementById('paths-container');
+        if (!activePathsContainer) {
+            activePathsContainer = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            activePathsContainer.setAttribute('id', 'paths-container');
+            svg.appendChild(activePathsContainer);
+        }
+        currentPathElement = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+        currentPathElement.setAttribute('fill', 'none');
+        currentPathElement.setAttribute('stroke', 'yellow');
+        currentPathElement.setAttribute('stroke-width', '1.5');
+        currentPathElement.setAttribute('stroke-dasharray', '2,2');
+        activePathsContainer.appendChild(currentPathElement);
+    }
+
     if (!isDrawingMode || !currentPathElement) return;
     if (e.target.closest('.draggable-cone, .draggable-icon')) return;
+    
     let pt = svg.createSVGPoint();
     pt.x = e.clientX;
     pt.y = e.clientY;
     let svgPoint = pt.matrixTransform(svg.getScreenCTM().inverse());
     currentPathPoints.push(`${svgPoint.x},${svgPoint.y}`);
     currentPathElement.setAttribute('points', currentPathPoints.join(' '));
-}); // end draw path svg
+});
 
 // touch and mouse listeners
 let activeGroup = null;
@@ -108,13 +205,24 @@ let isDragging = false;
 let startX, startY;
 window.addEventListener('mousedown', (e) => startDrag(e));
 window.addEventListener('touchstart', (e) => startDrag(e), { passive: false });
-// end touch and mouse listeners
 
-// touch and drag function
 function startDrag(e) {
-    // Target both draggable cones and icons
     const targetGroup = e.target.closest('.draggable-cone, .draggable-icon');
     if (!targetGroup) return;
+    
+    if (isDrawingMode) {
+        if (currentPathPoints.length === 0 && currentPathElement) {
+            currentPathElement.remove();
+            undoStack.pop();
+        }
+        isDrawingMode = false;
+        currentPathElement = null;
+        currentPathPoints = [];
+        addPathBtn.style.background = "";
+        addPathBtn.textContent = "Add Path";
+    }
+
+    pushState(); // Save state before moving an element
     isDragging = true;
     activeGroup = targetGroup;
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -123,9 +231,8 @@ function startDrag(e) {
     startY = clientY;
     svg.appendChild(activeGroup);
     if (e.type === 'touchstart') e.preventDefault();
-} // end touch and drag function
+}
 
-// move and drag function
 function handleMove(e) {
     if (!isDragging || !activeGroup) return;
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -147,10 +254,7 @@ function handleMove(e) {
     let currentX = 10 + currentTranslateX + dx;
     let currentY = 10 + currentTranslateY + dy;
 
-    // Separate boundaries for icons vs cones
     let minX, maxX, minY, maxY;
-   
-    // Default cone boundaries
     const r = 4;
     minX = 1 + r;
     maxX = 39 - r;
@@ -168,41 +272,33 @@ function handleMove(e) {
     startX = clientX;
     startY = clientY;
     if (e.type === 'touchmove') e.preventDefault();
-} // end move and drag function
+}
 
-// mouse and touch listeners
 window.addEventListener('mousemove', handleMove);
 window.addEventListener('touchmove', handleMove, { passive: false });
 window.addEventListener('mouseup', () => { isDragging = false; activeGroup = null; });
 window.addEventListener('touchend', () => { isDragging = false; activeGroup = null; });
-// end mouse and touch listeners
 
 // notes menu
 const closeNotesButton = document.getElementById('close-notes-menu');
 const notesdrop = document.getElementById('notes-backdrop');
 closeNotesButton.addEventListener('click', () => notesdrop.classList.remove('show'));
-// end notes menu
 
-// Open the notes menu from the main menu button
 const openNotes = document.getElementById('open-notes-button');
 openNotes.addEventListener('click', () => {
     notesdrop.classList.add('show');
     backdrop.classList.remove('show');
 });
 
-// 1. Grab your save button from the HTML
 const saveCourseBtn = document.getElementById('save-course');
 
-// 2. Add the click listener (Saves Cones, Paths, and Notes)
 saveCourseBtn.addEventListener('click', () => {
-    // Gather Cones data
     const cones = document.querySelectorAll('.draggable-cone');
     const coneData = [];
 
     cones.forEach(cone => {
         const transform = cone.getAttribute('transform');
         const match = /translate\(([^,]+),\s*([^\)]+)\)/.exec(transform);
-        
         if (match) {
             coneData.push({
                 x: parseFloat(match[1]),
@@ -211,8 +307,8 @@ saveCourseBtn.addEventListener('click', () => {
         }
     });
 
-    // Gather Paths data
-    const paths = pathsContainer ? pathsContainer.querySelectorAll('polyline') : [];
+    const activePathsContainer = document.getElementById('paths-container');
+    const paths = activePathsContainer ? activePathsContainer.querySelectorAll('polyline') : [];
     const pathData = [];
 
     paths.forEach(path => {
@@ -222,11 +318,9 @@ saveCourseBtn.addEventListener('click', () => {
         }
     });
 
-    // Gather Notes data (Targeting the textarea via ID 'notes-box')
     const notesInput = document.getElementById('notes-box');
     const notesData = notesInput ? notesInput.value : '';
 
-    // Update the browser URL with all parameters
     const url = new URL(window.location.href);
     url.searchParams.set('cones', JSON.stringify(coneData));
     url.searchParams.set('paths', JSON.stringify(pathData));
@@ -237,13 +331,10 @@ saveCourseBtn.addEventListener('click', () => {
     }
     
     window.history.replaceState({}, '', url);
-
-    // Copy the shareable link to the clipboard
     navigator.clipboard.writeText(url.toString());
     alert("Course and notes saved! Shareable URL copied to clipboard.");
 });
 
-// Function that reads the URL and recreates Cones, Paths, and Notes
 function loadCourseFromURL() {
     const params = new URLSearchParams(window.location.search);
     const coneParam = params.get('cones');
@@ -253,7 +344,6 @@ function loadCourseFromURL() {
     if (!coneParam && !pathParam && !notesParam) return;
 
     try {
-        // Recreate Cones
         if (coneParam) {
             const coneData = JSON.parse(coneParam);
             coneData.forEach(data => {
@@ -279,8 +369,13 @@ function loadCourseFromURL() {
             });
         }
 
-        // Recreate Paths
-        if (pathParam && pathsContainer) {
+        if (pathParam) {
+            let activePathsContainer = document.getElementById('paths-container');
+            if (!activePathsContainer) {
+                activePathsContainer = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                activePathsContainer.setAttribute('id', 'paths-container');
+                svg.appendChild(activePathsContainer);
+            }
             const pathData = JSON.parse(pathParam);
             pathData.forEach(points => {
                 const pathElement = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
@@ -289,23 +384,19 @@ function loadCourseFromURL() {
                 pathElement.setAttribute('stroke-width', '1.5');
                 pathElement.setAttribute('stroke-dasharray', '2,2');
                 pathElement.setAttribute('points', points);
-                pathsContainer.appendChild(pathElement);
+                activePathsContainer.appendChild(pathElement);
             });
         }
 
-        // Load Notes into textarea field
         if (notesParam) {
             const notesInput = document.getElementById('notes-box');
             if (notesInput) {
                 notesInput.value = notesParam;
             }
         }
-        
-        console.log("Course and notes loaded successfully from URL!");
     } catch (e) {
         console.error("Could not parse course data from URL:", e);
     }
 }
 
-// Automatically trigger loading the moment the page loads
 window.addEventListener('DOMContentLoaded', loadCourseFromURL);
