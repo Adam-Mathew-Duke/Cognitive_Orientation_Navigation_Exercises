@@ -1,0 +1,52 @@
+html, body {
+    background-color: blue;
+    height: 90vh;
+    width: 90vw;
+    margin: auto;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* hide scrollbars */
+}
+
+canvas {
+    touch-action: none; /* don't scroll around while drawing */
+}
+
+/* Scale canvas with resize attribute to the full size */
+canvas[resize] {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.drawing-class {
+    background-color: lightgray;
+    flex: 1; /* Takes up all remaining vertical space dynamically */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden; /* Keeps the Paper.js canvas strictly bounded */
+    margin-top:5px;
+}
+
+/* Compact and scalable tool bar */
+.tool-class {
+    display: flex;
+    flex-wrap: wrap; /* Wraps if the screen gets too narrow */
+    gap: 4px;
+    padding: 6px;
+    border-radius: 4px;
+}
+
+.tool-class button {
+    width: auto;
+    flex: 1 1 auto; /* Allows buttons to shrink and grow fluidly */
+    min-width: 60px; /* Keeps buttons from getting squished too small */
+    padding: 4px 8px; /* Extra compact padding */
+    font-size: 10px;  /* Small, clean font */
+    margin-bottom: 0;
+    line-height: 1.2;
+}

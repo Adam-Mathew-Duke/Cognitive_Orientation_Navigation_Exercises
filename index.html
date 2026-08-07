@@ -1,56 +1,34 @@
-<!doctype html>
-<html lang="en">
-
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="UTF-8">
-        <link rel="shortcut icon" href="#">
-        <link rel="stylesheet" href="style.css"> 
-        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-        <script type="text/javascript" src="paperjs-v0.12.18/dist/paper-full.js"></script>
-        <script type="text/paperscript" canvas="canvas"></script>
-        <title>Cognitive Orientation Navigation Exercises</title>
-    </head>
 
+        <!-- Load style css -->
+        <link rel="stylesheet" href="css/style.css">
+
+        <!-- Load Pico Min CSS file -->
+        <link rel="stylesheet" href="css/pico.min.css">
+    </head>
     <body>
 
-        <!-- Main menu and dark background effect -->
-        <div class="modal-backdrop" id="menu-backdrop">
-            <div class="main-menu-container">
-                <div><button class="button-main-menu" id="add-cone">Add Cone</button></div>
-                <div><button class="button-main-menu" id="add-path">Add Path</button></div>
-                <div><button class="button-main-menu" id="undo-action">Undo</button></div>
-                <div><button class="button-main-menu" id="open-notes-button">Add Notes</button></div>
-                <div><button class="button-main-menu" id="save-course">Save Course</button></div>
-                <div><button class="button-main-menu" id="clear-course">Clear Course</button></div>
-                <div><button class="button-main-menu" id="close-menu-btn">Close Menu</button></div>
-            </div>
+        <!-- Drawing space -->
+        <div class="drawing-class" id="drawing-id">
+            <canvas id="myCanvas" resize></canvas>
         </div>
 
-        <!-- Notes container with a multi line text area -->
-        <div class="notes-backdrop" id="notes-backdrop">
-            <div class="notes-container" id="notes-area">
-                <div><textarea id="notes-box" rows="4%" cols="12%"></textarea></div>
-                <div><button class="button-main-menu" id="close-notes-menu">Close Notes</button></div>
-            </div>
+        <!-- Tools space -->   
+        <div class="tool-class" id="tool-id">
+            <button id="btn-cone">Cone</button>
+            <button id="btn-path">Path</button>
+            <button disabled id="note-btn">Notes</button>
+            <button id="undo-btn">Undo</button>
+            <button id="clear-btn">Clear</button>
+            <button disabled id="save-btn">SAVE</button>
         </div>
 
-        <!-- Cone course -->
-        <div id="course-container" class="course-container">
-            <svg id="course-svg" viewBox="0 0 40 80" xmlns="http://www.w3.org/2000/svg">
-                <g id="paths-container"></g>
-            </svg>
-        </div>
-
-        <!-- Bottom toolbar -->
-        <div class="tool-container">
-            <div>
-                <button class="toolbar-main-menu-button" id="open-menu-btn">Menu</button>
-            </div>
-        </div>
-
-        <!-- Main Javascript -->
-        <script src="main.js"></script>
+        <!-- Load paper.js -->
+        <script type="text/javascript" src="js/paper-full.js"></script>
+     
+        <!-- Load main.js -->
+        <script type="text/paperscript" src="js/main.js" canvas="myCanvas"></script>
     </body>
 </html>
