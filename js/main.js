@@ -24,7 +24,7 @@ pathTool.onMouseDown = function(event) {
     currentPath = new Path({
         segments: [event.point],
         strokeColor: 'black',
-        strokeWidth: 2,
+        strokeWidth: 3,
         strokeCap: 'round',
         strokeJoin: 'round'
     });
@@ -52,7 +52,7 @@ coneTool.onMouseDown = function(event) {
     } else {
         new Path.Circle({
             center: event.point,
-            radius: 5, // 15
+            radius: 15, // 15
             fillColor: '#e20cb7',
             strokeColor: '#ffffff',
             strokeWidth: 1

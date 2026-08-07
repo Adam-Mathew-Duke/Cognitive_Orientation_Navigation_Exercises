@@ -46,7 +46,7 @@ canvas[resize] {
     flex: 1 1 auto; /* Allows buttons to shrink and grow fluidly */
     min-width: 60px; /* Keeps buttons from getting squished too small */
     padding: 4px 8px; /* Extra compact padding */
-    font-size: 10px;  /* Small, clean font */
+    font-size: 12px;  /* Small, clean font */
     margin-bottom: 0;
     line-height: 1.2;
 }
