@@ -1,52 +1,61 @@
-html, body {
-    background-color: blue;
-    height: 90vh;
-    width: 90vw;
+html,body {
+    background-color: black;
+    height: 85vh;
+    width: 85vw;
     margin: auto;
     padding: 0;
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* hide scrollbars */
+    /* Hide the scrollbars */
+    overflow: hidden;
 }
 
 canvas {
-    touch-action: none; /* don't scroll around while drawing */
+    /* Do not scroll around the webpage while drawing */
+    touch-action: none;
 }
 
-/* Scale canvas with resize attribute to the full size */
 canvas[resize] {
+    /* Scale the canvas to full size */
     width: 100%;
     height: 100%;
     display: block;
 }
 
 .drawing-class {
-    background-color: lightgray;
-    flex: 1; /* Takes up all remaining vertical space dynamically */
+    background-color:lightgray;
+    /* Takes up all remaining vertical space dynamically */
+    flex: 1;
     width: 100%;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
     position: relative;
-    overflow: hidden; /* Keeps the Paper.js canvas strictly bounded */
+    /* Keeps the paper.js canvas bounded */
+    overflow: hidden;
     margin-top:5px;
 }
 
-/* Compact and scalable tool bar */
 .tool-class {
+    /* Compact and scalable tool bar with buttons */
     display: flex;
-    flex-wrap: wrap; /* Wraps if the screen gets too narrow */
-    gap: 4px;
-    padding: 6px;
-    border-radius: 4px;
+    /* Wraps if the screen gets too narrow */
+    flex-wrap: wrap;
+    gap: 2px;
+    padding: 2px;
+    border-radius: 2px;
 }
 
 .tool-class button {
     width: auto;
-    flex: 1 1 auto; /* Allows buttons to shrink and grow fluidly */
-    min-width: 60px; /* Keeps buttons from getting squished too small */
-    padding: 4px 8px; /* Extra compact padding */
-    font-size: 12px;  /* Small, clean font */
+    /* Allows buttons to shrink and grow fluidly */
+    flex: 1 1 auto;
+    /* Keeps the buttons from getting squished (quish that cat)*/
+    min-width: 60px;
+    /* Compact button padding */
+    padding: 4px 8px;
+    /* Small font for the buttons */
+    font-size: 12px;
     margin-bottom: 0;
     line-height: 1.2;
 }

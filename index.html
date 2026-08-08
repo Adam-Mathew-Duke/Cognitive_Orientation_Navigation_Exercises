@@ -1,34 +1,28 @@
 <!DOCTYPE html>
 <html>
     <head>
-
-        <!-- Load style css -->
+        <!-- CSS -->
         <link rel="stylesheet" href="css/style.css">
-
-        <!-- Load Pico Min CSS file -->
         <link rel="stylesheet" href="css/pico.min.css">
     </head>
     <body>
-
-        <!-- Drawing space -->
+        <!-- Drawing -->
         <div class="drawing-class" id="drawing-id">
-            <canvas id="myCanvas" resize></canvas>
+            <canvas id="myCanvas" resize="true"></canvas>
         </div>
-
-        <!-- Tools space -->   
+        <!-- Tools -->
         <div class="tool-class" id="tool-id">
+            <button id="zoom-in-btn">+</button>
+            <button id="zoom-out-btn">-</button>
             <button id="btn-cone">Cone</button>
             <button id="btn-path">Path</button>
-            <button disabled id="note-btn">Notes</button>
+            <button id="btn-note">Note</button>
             <button id="undo-btn">Undo</button>
             <button id="clear-btn">Clear</button>
-            <button disabled id="save-btn">SAVE</button>
+            <button disabled id="save-btn">Save</button>
         </div>
-
-        <!-- Load paper.js -->
+        <!-- Javascript -->
         <script type="text/javascript" src="js/paper-full.js"></script>
-     
-        <!-- Load main.js -->
         <script type="text/paperscript" src="js/main.js" canvas="myCanvas"></script>
     </body>
 </html>
