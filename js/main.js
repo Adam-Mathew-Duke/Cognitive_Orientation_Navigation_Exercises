@@ -1,23 +1,29 @@
+// --- DEBOUNCED & NORMALIZED RESIZE HANDLER ---
 var oldSize = view.size.clone();
+var resizeTimeout = null;
 
 view.onResize = function(event) {
-    var scaleX = view.size.width / oldSize.width;
-    var scaleY = view.size.height / oldSize.height;
+    // Clear any pending resize trigger to debounce mobile browser chrome shifting
+    clearTimeout(resizeTimeout);
+    
+    resizeTimeout = setTimeout(function() {
+        var scaleX = view.size.width / oldSize.width;
+        var scaleY = view.size.height / oldSize.height;
 
-    // Loop through all top-level items in the active layer
-    project.activeLayer.children.forEach(function(item) {
-        if (item.data && (item.data.isCone || item.data.isNote)) {
-            // For cones and notes: Scale their position so they move 
-            // to the correct relative spot on the screen, but DO NOT scale their shape!
-            item.position.x *= scaleX;
-            item.position.y *= scaleY;
-        } else {
-            // For regular freehand drawing paths: Let them scale/stretch normally
-            item.scale(scaleX, scaleY, new Point(0, 0));
-        }
-    });
+        // Loop through all top-level items in the active layer
+        project.activeLayer.children.forEach(function(item) {
+            if (item.data && (item.data.isCone || item.data.isNote)) {
+                // For cones and notes: Scale position relatively so they don't drift
+                item.position.x *= scaleX;
+                item.position.y *= scaleY;
+            } else {
+                // For regular freehand drawing paths: Let them scale/stretch normally from origin
+                item.scale(scaleX, scaleY, new Point(0, 0));
+            }
+        });
 
-    oldSize = view.size.clone();
+        oldSize = view.size.clone();
+    }, 250); // Wait 250ms for mobile rotation/chrome animation to fully settle
 };
 
 var zoomInBtn = document.getElementById('zoom-in-btn');
