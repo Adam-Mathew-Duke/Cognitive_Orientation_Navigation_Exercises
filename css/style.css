@@ -1,5 +1,5 @@
-/* Show a warning screen if someone turns their phone to landscape */
-@media screen and (orientation: landscape) and (max-height: 600px) {
+/* Show a warning screen only on mobile devices turned to landscape */
+@media screen and (orientation: landscape) and (max-height: 600px) and (pointer: coarse) {
     body::before {
         content: "Please rotate your device back to portrait mode.";
         position: fixed;
@@ -80,4 +80,17 @@ canvas[resize] {
     font-size: 12px;
     margin-bottom: 0;
     line-height: 1.2;
+}
+
+/* Override Pico CSS button colors when a tool is active */
+button.active {
+    background-color: #e20cb7 !important; /* Matches your magenta cones or pick any color */
+    border-color: #ffffff !important;
+    color: #ffffff !important;
+}
+
+.functions-class{
+    background-color: #114794 !important; /* Matches your magenta cones or pick any color */
+    /*border-color: #ffffff !important;*/
+    /*color: #ffffff !important;*/
 }

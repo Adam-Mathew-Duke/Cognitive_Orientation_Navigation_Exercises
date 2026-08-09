@@ -12,16 +12,36 @@
         <div class="drawing-class" id="drawing-id">
             <canvas id="myCanvas" resize="true"></canvas>
         </div>
+
         <!-- Tools -->
         <div class="tool-class" id="tool-id">
-            <button id="zoom-in-btn">+</button>
-            <button id="zoom-out-btn">-</button>
-            <button id="btn-cone">Cone</button>
-            <button id="btn-path">Path</button>
+
+            <!-- Tools -->
+            <button id="btn-cone">
+            <svg width="20" height="20" viewBox="-16 -16 32 32" xmlns="http://www.w3.org/2000/svg">
+            <circle r="12.948" fill="#24e50b" stroke="#595e88" stroke-width="2"/>
+            </svg>
+            <div>Add Cone</div>
+            </button>
+
+            <button id="btn-path">
+       <svg width="24" height="24" viewBox="200 195 195 100" xmlns="http://www.w3.org/2000/svg" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="206.49" y1="204.27" x2="270.66" y2="263.33" fill="none" stroke="#096e07" stroke-width="14"/>
+  <line x1="264.70" y1="260.78" x2="356.98" y2="237.21" fill="none" stroke="#096e07" stroke-width="14"/>
+  <line x1="350.16" y1="233.80" x2="387.08" y2="287.75" fill="none" stroke="#096e07" stroke-width="14"/>
+</svg>
+            <div>Add Path</div>
+            </button>
+
             <button id="btn-note">Note</button>
-            <button id="undo-btn">Undo</button>
-            <button id="clear-btn">Clear</button>
-            <button disabled id="save-btn">Save</button>
+        
+            <!-- Funtions -->
+            <button class="functions-class" id="zoom-in-btn">+</button>
+            <button class="functions-class" id="zoom-out-btn">-</button>
+            <button class="functions-class" id="undo-btn">Undo</button>
+            <button class="functions-class" id="clear-btn">Clear</button>
+            <button class="functions-class" id="save-btn">Save</button>
+        
         </div>
         <!-- Javascript -->
         <script type="text/javascript" src="js/paper-full.js"></script>

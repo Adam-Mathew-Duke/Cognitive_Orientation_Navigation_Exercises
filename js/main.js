@@ -31,15 +31,47 @@ var zoomOutBtn = document.getElementById('zoom-out-btn');
 
 if (zoomInBtn) {
     zoomInBtn.addEventListener('click', function() {
-        view.zoom = Math.min(view.zoom * 1.2, 5); // Zoom in, max 5x
+        var oldZoom = view.zoom;
+        var oldCenter = view.center;
+        var newZoom = Math.min(oldZoom * 1.5, 5);
+        
+        view.zoom = newZoom;
+        view.center = oldCenter.add(view.center.subtract(oldCenter).multiply(oldZoom / view.zoom));
     });
 }
 
 if (zoomOutBtn) {
     zoomOutBtn.addEventListener('click', function() {
-        view.zoom = Math.max(view.zoom / 1.2, 0.2); // Zoom out, min 0.2x
+        var oldZoom = view.zoom;
+        var oldCenter = view.center;
+        var newZoom = Math.max(oldZoom / 1.2, 0.5);
+        
+        view.zoom = newZoom;
+        view.center = oldCenter.add(view.center.subtract(oldCenter).multiply(oldZoom / view.zoom));
     });
 }
+
+// --- URL STATE ENCODING / DECODING HELPERS ---
+function loadStateFromURL() {
+    try {
+        var hash = window.location.hash.substring(1);
+        if (hash) {
+            // Decode the URI component back into a raw JSON string
+            var jsonString = decodeURIComponent(hash);
+            project.clear();
+            project.importJSON(jsonString);
+            return true;
+        }
+    } catch (e) {
+        console.error("Failed to decode state from URL:", e);
+    }
+    return false;
+}
+
+// Listen for changes to the URL hash (e.g. clicking a shared link or back/forward buttons)
+window.addEventListener('hashchange', function() {
+    loadStateFromURL();
+});
 
 // --- 0. STATE & HISTORY MANAGEMENT ---
 var undoStack = [];
@@ -53,10 +85,13 @@ function saveState() {
             undoStack.shift();
         }
     }
+    // Notice we removed background URL updates from here to keep your address bar clean!
 }
 
-// Save initial blank state on startup
-saveState();
+// Load from URL hash on startup, otherwise save initial blank state
+if (!loadStateFromURL()) {
+    saveState();
+}
 
 // --- 1. SETUP THE PATH TOOL (Freehand Drawing) ---
 var pathTool = new Tool();
@@ -87,7 +122,6 @@ var coneTool = new Tool();
 var draggedCone = null;
 
 coneTool.onMouseDown = function(event) {
-
     var hitResult = project.hitTest(event.point, { fill: true, stroke: true, tolerance: 5 });
     
     if (hitResult && hitResult.item) {
@@ -265,3 +299,26 @@ function setupUI() {
 }
 
 setupUI();
+
+// --- SAVE / COPY LINK BUTTON ---
+var saveButton = document.getElementById('save-btn');
+if (saveButton) {
+    saveButton.addEventListener('click', function() {
+        try {
+            // Generate encoded state strictly on demand when saving
+            var jsonString = project.exportJSON();
+            var encoded = encodeURIComponent(jsonString);
+            
+            var baseUrl = window.location.origin + window.location.pathname;
+            var shareableUrl = baseUrl + "#" + encoded;
+            
+            navigator.clipboard.writeText(shareableUrl).then(function() {
+                alert('URL copied to clipboard!');
+            }).catch(function(err) {
+                console.error('Failed to copy URL to the clipboard: ', err);
+            });
+        } catch (e) {
+            console.error("Failed to create sharable URL:", e);
+        }
+    });
+}
