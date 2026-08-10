@@ -1,4 +1,4 @@
-// main.js
+// js/main.js
 
 import { ZoomManager } from './toolbar_zoom.js';
 

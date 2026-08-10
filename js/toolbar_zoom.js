@@ -1,9 +1,10 @@
 // js/toolbar_zoom.js
-
 export class ZoomManager 
 {
-    constructor(view) 
+    // Class instance
+    constructor(view)
     {
+        // Class instance properties
         this.view = view;
         this.defaultZoom = view.zoom;
         this.defaultCenter = view.center.clone();
@@ -13,12 +14,15 @@ export class ZoomManager
         this.initResizeHandler();
     }
 
+    // Element listeners
     initListeners() 
     {
+        // Button element listeners
         const zoomInBtn = document.getElementById('toolbar-main-zoom-in-btn');
         const zoomOutBtn = document.getElementById('toolbar-main-zoom-out-btn');
         const zoomDefaultBtn = document.getElementById('toolbar-main-zoom-default-btn');
 
+        // Zoom default button listener
         if (zoomDefaultBtn) 
         {
             zoomDefaultBtn.addEventListener('click', () =>
@@ -27,6 +31,7 @@ export class ZoomManager
             });
         }
 
+        // Zoom in button listener
         if (zoomInBtn) 
         {
             zoomInBtn.addEventListener('click', () => 
@@ -35,6 +40,7 @@ export class ZoomManager
             });
         }
 
+        // Zoom out button listener
         if (zoomOutBtn) 
         {
             zoomOutBtn.addEventListener('click', () => 
@@ -44,12 +50,12 @@ export class ZoomManager
         }
     }
 
+    // Reset the paper.js canvas scale when a window resize is detected
     initResizeHandler() 
     {
         this.view.onResize = (event) => 
         {
             clearTimeout(this.resizeTimeout);
-            
             this.resizeTimeout = setTimeout(() => 
             {
                 var scaleX = this.view.size.width / this.oldSize.width;
@@ -68,10 +74,11 @@ export class ZoomManager
                 });
 
                 this.oldSize = this.view.size.clone();
-            }, 250);
+            }, 250); // time for the view to rotate on mobile
         };
     }
 
+    // Zoom in method
     zoomIn() 
     {
         var oldZoom = this.view.zoom;
@@ -81,6 +88,7 @@ export class ZoomManager
         this.view.center = oldCenter.add(this.view.center.subtract(oldCenter).multiply(oldZoom / this.view.zoom));
     }
 
+    // Zoom out method
     zoomOut() 
     {
         var oldZoom = this.view.zoom;
@@ -90,6 +98,7 @@ export class ZoomManager
         this.view.center = oldCenter.add(this.view.center.subtract(oldCenter).multiply(oldZoom / this.view.zoom));
     }
 
+    // Zoom reset method
     resetZoom() 
     {
         this.view.zoom = this.defaultZoom;
