@@ -1,0 +1,96 @@
+/* Show a warning screen only on mobile devices turned to landscape */
+@media screen and (orientation: landscape) and (max-height: 600px) and (pointer: coarse) {
+    body::before {
+        content: "Please rotate your device back to portrait mode.";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: #111;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 2rem;
+        z-index: 99999;
+        font-family: sans-serif;
+        font-size: 1.2rem;
+    }
+}
+
+html,body {
+    background-color: black;
+    height: 85vh;
+    width: 85vw;
+    margin: auto;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    /* Hide the scrollbars */
+    overflow: hidden;
+}
+
+canvas {
+    /* Do not scroll around the webpage while drawing */
+    touch-action: none;
+}
+
+canvas[resize] {
+    /* Scale the canvas to full size */
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.drawing-class {
+    background-color:lightgray;
+    /* Takes up all remaining vertical space dynamically */
+    flex: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    position: relative;
+    /* Keeps the paper.js canvas bounded */
+    overflow: hidden;
+    margin-top:5px;
+}
+
+.tool-class {
+    /* Compact and scalable tool bar with buttons */
+    display: flex;
+    /* Wraps if the screen gets too narrow */
+    flex-wrap: wrap;
+    gap: 2px;
+    padding: 2px;
+    border-radius: 2px;
+}
+
+.tool-class button {
+    width: auto;
+    /* Allows buttons to shrink and grow fluidly */
+    flex: 1 1 auto;
+    /* Keeps the buttons from getting squished (quish that cat)*/
+    min-width: 60px;
+    /* Compact button padding */
+    padding: 4px 8px;
+    /* Small font for the buttons */
+    font-size: 12px;
+    margin-bottom: 0;
+    line-height: 1.2;
+}
+
+/* Override Pico CSS button colors when a tool is active */
+button.active {
+    background-color: #e20cb7 !important; /* Matches your magenta cones or pick any color */
+    border-color: #ffffff !important;
+    color: #ffffff !important;
+}
+
+.functions-class{
+    background-color: #114794 !important; /* Matches your magenta cones or pick any color */
+    /*border-color: #ffffff !important;*/
+    /*color: #ffffff !important;*/
+}
