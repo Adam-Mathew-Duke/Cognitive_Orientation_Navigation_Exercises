@@ -1,29 +1,55 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <!-- CSS -->
-        <link rel="stylesheet" href="css/style.css">
-        <link rel="stylesheet" href="css/pico.min.css">
-        <!-- JSON -->
+
+        <!-- Ignore the favicon request -->
+        <link rel="icon" href="data:,">
+
+        <!-- Load CSS files -->
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/canvas_course.css">
+        <link rel="stylesheet" href="css/toolbar_main.css">
+        <link rel="stylesheet" href="css/pico/pico.min.css">
         <link rel="manifest" href="json/manifest.json">
     </head>
     <body>
-        <!-- Drawing -->
+
+        <!-- Course canvas -->
+        <div class="course-class" id="course-id">
+            <canvas id="courseCanvas" resize="true"></canvas>
+        </div>
+
+            <!-- Main toolbar -->
+            <div class ="toolbar-main-class" id="toolbar-main-id">
+                <button id="toolbar-main-btn-cone">CONES</button>
+                <button id="toolbar-main-btn-path">PATHS</button>
+                <button id="toolbar-main-btn-note">NOTES</button>
+                <button id="toolbar-main-zoom-in-btn">ZOOM IN</button>
+                <button id="toolbar-main-zoom-out-btn">ZOOM OUT</button>
+                <button id="toolbar-main-zoom-default-btn">ZOOM DEFAULT</button>
+                <button disabled id="toolbar-main-redo-btn">REDO</button>
+                <button id="toolbar-main-undo-btn">UNDO</button>
+                <button id="toolbar-main-clear-btn">CLEAR</button>
+                <button id="toolbar-main-save-btn">SAVE</button>       
+            </div>
+
+        <!-- Load scripts -->
+        <script type="text/javascript" src="js/paper/paper-full.js"></script>
+        <script type="module" src="js/main.js"></script>
+    </body>
+</html>
+
+<!--
         <div class="drawing-class" id="drawing-id">
             <canvas id="myCanvas" resize="true"></canvas>
         </div>
-
-        <!-- Tools -->
         <div class ="tool-class" id="tool-id">
-
-            <!-- Tools -->
             <button id="btn-cone">
             <svg width="20" height="20" viewBox="-16 -16 32 32" xmlns="http://www.w3.org/2000/svg">
             <circle r="12.948" fill="#24e50b" stroke="#595e88" stroke-width="2"/>   
             </svg>
             <div>Add Cone</div>
             </button>
-
             <button id="btn-path">
        <svg width="24" height="24" viewBox="200 195 195 100" xmlns="http://www.w3.org/2000/svg" stroke-linecap="round" stroke-linejoin="round">
   <line x1="206.49" y1="204.27" x2="270.66" y2="263.33" fill="none" stroke="#096e07" stroke-width="14"/>
@@ -32,19 +58,13 @@
 </svg>
             <div>Add Path</div>
             </button>
-
             <button id="btn-note">Note</button>
-        
-            <!-- Funtions -->
             <button class="functions-class" id="zoom-in-btn">+</button>
             <button class="functions-class" id="zoom-out-btn">-</button>
             <button class="functions-class" id="undo-btn">Undo</button>
             <button class="functions-class" id="clear-btn">Clear</button>
-            <button class="functions-class" id="save-btn">Save</button>
-        
+            <button class="functions-class" id="save-btn">Save</button>       
         </div>
-        <!-- Javascript -->
-        <script type="text/javascript" src="js/paper-full.js"></script>
-        <script type="text/paperscript" src="js/main.js" canvas="myCanvas"></script>
     </body>
 </html>
+-->
