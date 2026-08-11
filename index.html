@@ -23,16 +23,102 @@
 
             <!-- Main toolbar -->
             <div class ="toolbar-main-class" id="toolbar-main-id">
-                <button id="toolbar-main-btn-cone">CONES</button>
-                <button id="toolbar-main-btn-path">PATHS</button>
-                <button id="toolbar-main-btn-note">NOTES</button>
-                <button id="toolbar-main-zoom-in-btn">ZOOM IN</button>
-                <button id="toolbar-main-zoom-out-btn">ZOOM OUT</button>
-                <button id="toolbar-main-zoom-default-btn">ZOOM DEFAULT</button>
-                <button disabled id="toolbar-main-redo-btn">REDO</button>
-                <button id="toolbar-main-undo-btn">UNDO</button>
-                <button id="toolbar-main-clear-btn">CLEAR</button>
-                <button id="toolbar-main-save-btn">SAVE</button>       
+
+                <button id="toolbar-main-btn-cone" class="toolbar-btn" title="Add Cone">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="#ff04fb59" stroke-width="2" fill="#ff04fb" fill-opacity="1"/>
+                        <circle cx="12" cy="12" r="4.5" fill="#e20cb7" stroke="#ffffff" stroke-width="1.5"/>
+                    </svg>
+                    <span>Add Cone</span>
+                </button>
+
+                <button id="toolbar-main-btn-path" class="toolbar-btn" title="Draw Path">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Wide semi-transparent outer glow stroke -->
+                        <path d="M4 16C8 16 9 8 14 10C19 12 18 20 20 20" stroke="#ff04fb59" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+                        <!-- Sharp core inner stroke -->
+                        <path d="M4 16C8 16 9 8 14 10C19 12 18 20 20 20" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Add Path</span>
+                </button>
+
+                <button id="toolbar-main-btn-note" class="toolbar-btn" title="Add Note">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Document background -->
+                        <rect x="5" y="3" width="14" height="18" rx="2" stroke="#ff04fb59" stroke-width="2" fill="#ff04fb" fill-opacity="0.15"/>
+                        <!-- Text lines inside the note -->
+                        <line x1="8" y1="8" x2="16" y2="8" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="8" y1="12" x2="16" y2="12" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="8" y1="16" x2="12" y2="16" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                        <span>Add Note</span>
+                </button>
+
+                <button id="toolbar-main-zoom-in-btn" class="toolbar-btn" title="Zoom In">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="10.5" cy="10.5" r="7.5" stroke="#e20cb7" stroke-width="2"/>
+                        <line x1="16" y1="16" x2="22" y2="22" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="10.5" y1="7.5" x2="10.5" y2="13.5" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="7.5" y1="10.5" x2="13.5" y2="10.5" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <span>Zoom In</span>
+                </button>
+
+                <button id="toolbar-main-zoom-out-btn" class="toolbar-btn" title="Zoom Out">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="10.5" cy="10.5" r="7.5" stroke="#e20cb7" stroke-width="2"/>
+                        <line x1="16" y1="16" x2="22" y2="22" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="7.5" y1="10.5" x2="13.5" y2="10.5" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <span>Zoom Out</span>
+                </button>
+
+                <button id="toolbar-main-zoom-default-btn" class="toolbar-btn" title="Reset Zoom">
+                    <svg width="25" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="3" stroke="#e20cb7" stroke-width="2"/>
+                        <circle cx="12" cy="12" r="9" stroke="#e20cb7" stroke-width="2" stroke-dasharray="3 3"/>
+                        <path d="M12 3V1" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M12 21V19" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M3 12H1" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M21 12H19" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                        <span>Reset Zoom</span>
+                    </svg>
+                </button>
+
+                <button id="toolbar-main-redo-btn" class="toolbar-btn" title="Redo">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 5H17C18.6569 5 20 6.34315 20 8V16C20 17.6569 18.6569 19 17 19H7C5.34315 19 4 17.6569 4 16V8C4 6.34315 5.34315 5 7 5H9" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/> <!-- Faded when disabled -->
+                        <path d="M16 9L19 5L22 9" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/> <!-- Faded when disabled -->
+                        <span>Redo Action</span>
+                    </svg>
+                </button>
+
+                <button id="toolbar-main-undo-btn" class="toolbar-btn" title="Undo">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 5H7C5.34315 5 4 6.34315 4 8V16C4 17.6569 5.34315 19 7 19H17C18.6569 19 20 17.6569 20 16V8C20 6.34315 18.6569 5 17 5H15" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M8 9L5 5L2 9" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Undo Action</span>
+                </button>
+
+                <button id="toolbar-main-clear-btn" class="toolbar-btn" title="Clear All">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 6h18" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M8 6V4h8v2" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0v12h8V6" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <span>Clear Course</span>
+                </button>
+
+                <button id="toolbar-main-save-btn" class="toolbar-btn" title="Copy URL State">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <polyline points="16 18 22 12 16 6" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <polyline points="8 6 2 12 8 18" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <line x1="14" y1="4" x2="10" y2="20" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <span>Save URL</span>
+                </button>
+
             </div>
 
         <!-- Load scripts -->
@@ -40,27 +126,3 @@
         <script type="module" src="js/main.js"></script>
     </body>
 </html>
-
-<!--
-OLD CODE
-<div class="drawing-class" id="drawing-id">
-<canvas id="myCanvas" resize="true"></canvas></div>
-<div class ="tool-class" id="tool-id">
-<button id="btn-cone">
-<svg width="20" height="20" viewBox="-16 -16 32 32" xmlns="http://www.w3.org/2000/svg">
-<circle r="12.948" fill="#24e50b" stroke="#595e88" stroke-width="2"/>   
-</svg><div>Add Cone</div></button>
-<button id="btn-path">
-<svg width="24" height="24" viewBox="200 195 195 100" xmlns="http://www.w3.org/2000/svg" stroke-linecap="round" stroke-linejoin="round">
-<line x1="206.49" y1="204.27" x2="270.66" y2="263.33" fill="none" stroke="#096e07" stroke-width="14"/>
-<line x1="264.70" y1="260.78" x2="356.98" y2="237.21" fill="none" stroke="#096e07" stroke-width="14"/>
-<line x1="350.16" y1="233.80" x2="387.08" y2="287.75" fill="none" stroke="#096e07" stroke-width="14"/>
-</svg><div>Add Path</div></button>
-<button id="btn-note">Note</button>
-<button class="functions-class" id="zoom-in-btn">+</button>
-<button class="functions-class" id="zoom-out-btn">-</button>
-<button class="functions-class" id="undo-btn">Undo</button>
-<button class="functions-class" id="clear-btn">Clear</button>
-<button class="functions-class" id="save-btn">Save</button>       
-</div>
--->
