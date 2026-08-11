@@ -1,4 +1,3 @@
-// js/main.js
 import { ZoomManager } from './toolbar_zoom.js';
 import { ConeManager } from './toolbar_cone.js';
 import { PathManager } from './toolbar_path.js';
@@ -7,7 +6,7 @@ import { StateManager } from './state_manager.js';
 import { ShareManager } from './share_manager.js';
 import { UIManager } from './ui_manager.js';
 
-const stateManager = new StateManager(20);
+const stateManager = new StateManager(20); // 20 levels of undo and redo
 
 window.onload = function() {
 
@@ -28,8 +27,7 @@ window.onload = function() {
     if (!stateManager.loadStateFromURL()) {
         stateManager.saveState();
     } else {
-        // If loaded from URL successfully, refresh UI button states
-        uiManager._updateHistoryButtons();
+        uiManager._updateHistoryButtons(); // If loaded from URL successfully, refresh UI button states
     }
 
     window.addEventListener('hashchange', function() {

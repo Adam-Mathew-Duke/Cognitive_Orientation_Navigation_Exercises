@@ -1,9 +1,6 @@
-/* cs/main.css */
-
-/* Landscape mode message */
 @media screen and (orientation: landscape) and (max-height: 600px) and (pointer: coarse)
 {
-    body::before 
+    body::before /* Landscape mode message */
     {
         content: "Please rotate your device back to portrait mode.";
         position: fixed;
@@ -24,8 +21,7 @@
     }
 }
 
-/* HTML and body style */
-html,body 
+html,body /* HTML and body style */ 
 {
     background-color: black;
     height: 85vh;

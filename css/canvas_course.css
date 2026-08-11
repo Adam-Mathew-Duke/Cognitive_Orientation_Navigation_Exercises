@@ -1,19 +1,14 @@
-/* cs/canvas_course.css */
-
-canvas 
-{
+canvas{
     touch-action: none; /* Do not scroll around the webpage while drawing */
 }
 
-canvas[resize] /* Scale the canvas to full size */
-{
+canvas[resize]{
     width: 100%;
     height: 100%;
     display: block;
 }
 
-.course-class 
-{
+.course-class{
     background-color:lightgray;
     flex: 1; /* Takes up all remaining vertical space dynamically */
     width: 100%;
