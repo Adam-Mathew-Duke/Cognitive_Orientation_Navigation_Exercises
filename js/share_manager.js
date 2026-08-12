@@ -22,11 +22,12 @@ export class ShareManager {
             var baseUrl = window.location.origin + window.location.pathname;
             var shareableUrl = baseUrl + "#" + encoded;
             
-            navigator.clipboard.writeText(shareableUrl).then(function() {
-                alert('URL copied to clipboard!');
-            }).catch(function(err) {
-                console.error('Failed to copy URL to the clipboard: ', err);
-            });
+            navigator.clipboard.writeText(shareableUrl).then(() => {
+            this.tooltip = document.getElementById('tooltip_item-id');
+            this.tooltip.innerText = "URL copied to clipboard.";
+        }).catch((err) => {
+            console.error('Failed to copy URL to the clipboard: ', err);
+        });
         } catch (e) {
             console.error("Failed to create sharable URL:", e);
         }

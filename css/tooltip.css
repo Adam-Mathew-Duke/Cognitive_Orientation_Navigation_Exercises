@@ -1,0 +1,15 @@
+.tooltip-container-class {
+    width: 100%;
+    margin-top: 20px;
+    box-sizing: border-box;
+}
+
+.tooltip-item-class {
+    width: 100%;
+    padding: 8px 0px;
+    font-size: 16px;
+    line-height: 1.2;
+    background-color: #747276;
+    color: #ffffff;
+    text-align: center; /* Optional: centers your tip text */
+}

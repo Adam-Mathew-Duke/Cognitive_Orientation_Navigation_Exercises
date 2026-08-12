@@ -17,5 +17,5 @@ canvas[resize]{
     box-sizing: border-box;
     position: relative;
     overflow: hidden; /* Keeps the paper.js canvas bounded */
-    margin-top:20px; /* Gap at the top of the page */
+    margin-top:0px; /* Gap at the top of the page */
 }

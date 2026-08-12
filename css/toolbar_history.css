@@ -1,0 +1,16 @@
+.historytoolbar-hidden {
+    display: none !important;
+}
+
+.historytoolbar-btn {
+    width: auto;
+    flex: 1 1 auto; /* Allows buttons to shrink and grow fluidly */
+    min-width: 60px; /* Keeps the buttons from getting squished (quish that cat) */
+    padding: 4px 8px;
+    font-size: 16px;
+    margin-bottom: 0;
+    line-height: 1.2;
+    background-color: #93850b !important;
+    border-color: #ffffff !important;
+    color: #ffffff !important;
+}

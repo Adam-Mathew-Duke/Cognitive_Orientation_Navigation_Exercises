@@ -5,10 +5,18 @@
         <link rel="stylesheet" href="css/main.css">
         <link rel="stylesheet" href="css/canvas_course.css">
         <link rel="stylesheet" href="css/toolbar_main.css">
+        <link rel="stylesheet" href="css/toolbar_zoom.css">  
+        <link rel="stylesheet" href="css/toolbar_history.css">
+        <link rel="stylesheet" href="css/tooltip.css">      
         <link rel="stylesheet" href="css/pico/pico.min.css">
         <link rel="manifest" href="json/manifest.json">
     </head>
     <body>
+
+        <!-- Tool tips -->
+        <div class="tooltip-container-class" id="tooltip-container-id">
+            <div class="tooltip-item-class" id="tooltip_item-id">Add a cone, path or note.</div>
+        </div>
 
         <!-- Course canvas -->
         <div class="course-class" id="course-id">
@@ -47,57 +55,11 @@
                         <span>Add Note</span>
                 </button>
 
-                <!-- Zoom In button -->
-                <button id="toolbar-main-zoom-in-btn" class="toolbar-btn" title="Zoom In">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="10.5" cy="10.5" r="7.5" stroke="#e20cb7" stroke-width="2"/>
-                        <line x1="16" y1="16" x2="22" y2="22" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
-                        <line x1="10.5" y1="7.5" x2="10.5" y2="13.5" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
-                        <line x1="7.5" y1="10.5" x2="13.5" y2="10.5" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                    <span>Zoom In</span>
-                </button>
+                <!-- Zoom toolbar button -->
+                <button id="toolbar-toggle-btn" class="toolbar-btn" title="ZoomToolbar">Zoom Tools</button>
 
-                <!-- Zoom Out button -->
-                <button id="toolbar-main-zoom-out-btn" class="toolbar-btn" title="Zoom Out">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="10.5" cy="10.5" r="7.5" stroke="#e20cb7" stroke-width="2"/>
-                        <line x1="16" y1="16" x2="22" y2="22" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
-                        <line x1="7.5" y1="10.5" x2="13.5" y2="10.5" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                    <span>Zoom Out</span>
-                </button>
-
-                <!-- Zoom Default buttton -->
-                <button id="toolbar-main-zoom-default-btn" class="toolbar-btn" title="Reset Zoom">
-                    <svg width="25" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="12" cy="12" r="3" stroke="#e20cb7" stroke-width="2"/>
-                        <circle cx="12" cy="12" r="9" stroke="#e20cb7" stroke-width="2" stroke-dasharray="3 3"/>
-                        <path d="M12 3V1" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M12 21V19" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M3 12H1" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M21 12H19" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
-                        <span>Reset Zoom</span>
-                    </svg>
-                </button>
-
-                <!-- Redo Action button -->
-                <button id="toolbar-main-redo-btn" class="toolbar-btn" title="Redo">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M15 5H17C18.6569 5 20 6.34315 20 8V16C20 17.6569 18.6569 19 17 19H7C5.34315 19 4 17.6569 4 16V8C4 6.34315 5.34315 5 7 5H9" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/> <!-- Faded when disabled -->
-                        <path d="M16 9L19 5L22 9" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/> <!-- Faded when disabled -->
-                        <span>Redo Action</span>
-                    </svg>
-                </button>
-
-                <!-- Undo Action button -->
-                <button id="toolbar-main-undo-btn" class="toolbar-btn" title="Undo">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M9 5H7C5.34315 5 4 6.34315 4 8V16C4 17.6569 5.34315 19 7 19H17C18.6569 19 20 17.6569 20 16V8C20 6.34315 18.6569 5 17 5H15" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M8 9L5 5L2 9" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <span>Undo Action</span>
-                </button>
+                <!-- History toolbar button -->
+                <button id="history-toolbar-toggle-btn" class="toolbar-btn" title="HistoryToolbar">History Tools</button>
 
                 <!-- Clear Course button -->
                 <button id="toolbar-main-clear-btn" class="toolbar-btn" title="Clear All">
@@ -119,6 +81,74 @@
                     <span>Save URL</span>
                 </button>
             </div>
+
+            <!-- Zoom toolbar -->
+            <div class ="toolbar-main-class zoomtoolbar-hidden" id="zoomtoolbar-main-id">
+
+                <!-- Zoom In button -->
+                <button id="toolbar-main-zoom-in-btn" class="zoomtoolbar-btn" title="Zoom In">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="10.5" cy="10.5" r="7.5" stroke="#e20cb7" stroke-width="2"/>
+                <line x1="16" y1="16" x2="22" y2="22" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                <line x1="10.5" y1="7.5" x2="10.5" y2="13.5" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                <line x1="7.5" y1="10.5" x2="13.5" y2="10.5" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span>Zoom In</span>
+                </button>
+
+                <!-- Zoom Out button -->
+                <button id="toolbar-main-zoom-out-btn" class="zoomtoolbar-btn" title="Zoom Out">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="10.5" cy="10.5" r="7.5" stroke="#e20cb7" stroke-width="2"/>
+                <line x1="16" y1="16" x2="22" y2="22" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                <line x1="7.5" y1="10.5" x2="13.5" y2="10.5" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span>Zoom Out</span>
+                </button>
+
+                <!-- Zoom Default buttton -->
+                <button id="toolbar-main-zoom-default-btn" class="zoomtoolbar-btn" title="Reset Zoom">
+                <svg width="25" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="3" stroke="#e20cb7" stroke-width="2"/>
+                <circle cx="12" cy="12" r="9" stroke="#e20cb7" stroke-width="2" stroke-dasharray="3 3"/>
+                <path d="M12 3V1" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                <path d="M12 21V19" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                <path d="M3 12H1" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                <path d="M21 12H19" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                <span>Reset Zoom</span>
+                </svg>
+                </button>
+
+                <button class="zoomtoolbar-btn" title="ZoomToolbar" id="zoom-toolbar-toggle-btn">Main Tools</button>
+
+            </div>
+
+            <!-- History toolbar -->
+            <div class ="toolbar-main-class historytoolbar-hidden" id="historytoolbar-main-id">
+
+                <!-- Redo Action button -->
+                <button id="toolbar-main-redo-btn" class="historytoolbar-btn" title="Redo">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 5H17C18.6569 5 20 6.34315 20 8V16C20 17.6569 18.6569 19 17 19H7C5.34315 19 4 17.6569 4 16V8C4 6.34315 5.34315 5 7 5H9" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/> <!-- Faded when disabled -->
+                <path d="M16 9L19 5L22 9" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/> <!-- Faded when disabled -->
+                <span>Redo Action</span>
+                </svg>
+                </button>
+
+                <!-- Undo Action button -->
+                <button id="toolbar-main-undo-btn" class="historytoolbar-btn" title="Undo">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 5H7C5.34315 5 4 6.34315 4 8V16C4 17.6569 5.34315 19 7 19H17C18.6569 19 20 17.6569 20 16V8C20 6.34315 18.6569 5 17 5H15" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M8 9L5 5L2 9" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Undo Action</span>
+                </button>
+
+                <button class="historytoolbar-btn" title="HistoryToolbar" id="history-toolbar-return-btn">Main Tools</button>
+
+            </div>
+
+
         <script type="text/javascript" src="js/paper/paper-full.js"></script>
         <script type="module" src="js/main.js"></script>
     </body>

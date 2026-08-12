@@ -10,6 +10,11 @@ export class ZoomManager
         this.defaultCenter = view.center.clone();
         this.oldSize = view.size.clone();
         this.resizeTimeout = null;
+        this.minZoom = 0.5;
+        this.maxZoom = 5;
+
+        this.tooltip = document.getElementById('tooltip_item-id');
+        
         this.initListeners();
         this.initResizeHandler();
     }
@@ -27,7 +32,9 @@ export class ZoomManager
         {
             zoomDefaultBtn.addEventListener('click', () =>
             {
+                this.tooltip.innerText = "Zoomed back to the default view.";
                 this.resetZoom();
+                this.updateButtonStates();
             });
         }
 
@@ -36,7 +43,9 @@ export class ZoomManager
         {
             zoomInBtn.addEventListener('click', () => 
             {
+                this.tooltip.innerText = "View has been zoomed in.";
                 this.zoomIn();
+                this.updateButtonStates();
             });
         }
 
@@ -45,7 +54,9 @@ export class ZoomManager
         {
             zoomOutBtn.addEventListener('click', () => 
             {
+                this.tooltip.innerText = "View has been zoomed out.";
                 this.zoomOut();
+                this.updateButtonStates();
             });
         }
     }
@@ -78,12 +89,46 @@ export class ZoomManager
         };
     }
 
+    // Update states for all zoom buttons based on current zoom limits
+    updateButtonStates() {
+        const zoomInBtn = document.getElementById('toolbar-main-zoom-in-btn');
+        const zoomOutBtn = document.getElementById('toolbar-main-zoom-out-btn');
+        const zoomDefaultBtn = document.getElementById('toolbar-main-zoom-default-btn');
+
+        // Default / Reset button state
+        if (zoomDefaultBtn) {
+            if (this.view.zoom === this.defaultZoom) {
+                zoomDefaultBtn.setAttribute('disabled', 'true');
+            } else {
+                zoomDefaultBtn.removeAttribute('disabled');
+            }
+        }
+
+        // Zoom In button state (disabled if at max limit)
+        if (zoomInBtn) {
+            if (this.view.zoom >= this.maxZoom) {
+                zoomInBtn.setAttribute('disabled', 'true');
+            } else {
+                zoomInBtn.removeAttribute('disabled');
+            }
+        }
+
+        // Zoom Out button state (disabled if at min limit)
+        if (zoomOutBtn) {
+            if (this.view.zoom <= this.minZoom) {
+                zoomOutBtn.setAttribute('disabled', 'true');
+            } else {
+                zoomOutBtn.removeAttribute('disabled');
+            }
+        }
+    }
+
     // Zoom in method
     zoomIn() 
     {
         var oldZoom = this.view.zoom;
         var oldCenter = this.view.center;
-        var newZoom = Math.min(oldZoom * 1.5, 5);  
+        var newZoom = Math.min(oldZoom * 1.5, this.maxZoom);  
         this.view.zoom = newZoom;
         this.view.center = oldCenter.add(this.view.center.subtract(oldCenter).multiply(oldZoom / this.view.zoom));
     }
@@ -93,7 +138,7 @@ export class ZoomManager
     {
         var oldZoom = this.view.zoom;
         var oldCenter = this.view.center;
-        var newZoom = Math.max(oldZoom / 1.2, 0.5);
+        var newZoom = Math.max(oldZoom / 1.2, this.minZoom);
         this.view.zoom = newZoom;
         this.view.center = oldCenter.add(this.view.center.subtract(oldCenter).multiply(oldZoom / this.view.zoom));
     }
