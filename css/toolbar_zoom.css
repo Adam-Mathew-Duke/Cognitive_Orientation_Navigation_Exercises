@@ -1,5 +1,19 @@
-.zoomtoolbar-hidden {
-    display: none !important;
+/* zoomtoolbar.css */
+
+.zoomtoolbar-main-class {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    padding: 2px;
+    border-radius: 2px;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
 }
 
 .zoomtoolbar-btn {
@@ -13,4 +27,16 @@
     background-color: #095107 !important;
     border-color: #ffffff !important;
     color: #ffffff !important;
+}
+
+.zoomtoolbar-hidden {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
 }

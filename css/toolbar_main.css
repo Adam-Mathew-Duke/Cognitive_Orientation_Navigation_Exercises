@@ -1,9 +1,16 @@
+/* toolbar_main.css */
+
 .toolbar-main-class{
+    position: relative; /* Stays locked in the normal document flow so it never teleports */
+    width: 100%;
     display: flex; /* Compact and scalable tool bar with buttons */
     flex-wrap: wrap; /* Wraps if the screen gets too narrow */
     gap: 2px;
     padding: 2px;
     border-radius: 2px;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
 }
 
 .toolbar-main-class button{
@@ -14,6 +21,7 @@
     font-size: 16px;
     margin-bottom: 0;
     line-height: 1.2;
+    background-color: #1e0637 !important;
 }
 
 .toolbar-main-class button.active{
@@ -23,5 +31,13 @@
 }
 
 .toolbar-hidden {
-    display: none !important;
+    position: absolute; /* Only absolute when hidden so it steps out of the way */
+    top: 0;
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(50px); 
+    pointer-events: none;
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
 }

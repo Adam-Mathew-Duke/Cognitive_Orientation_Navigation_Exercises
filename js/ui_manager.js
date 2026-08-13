@@ -132,12 +132,12 @@ export class UIManager {
             });
         }
 
-        // Intercept saveState calls to dynamically update buttons if actions happen elsewhere
-        const originalSaveState = this.stateManager.saveState.bind(this.stateManager);
-        this.stateManager.saveState = () => {
-            originalSaveState();
-            this.updateHistoryButtons();
-        };
+        // Hook into StateManager's onStateChange callback so shortcut keys (Ctrl+Z / Ctrl+Y) automatically update buttons
+        if (this.stateManager) {
+            this.stateManager.onStateChange = () => {
+                this.updateHistoryButtons();
+            };
+        }
 
         // Default empty tool activation
         var emptyTool = new window.paper.Tool();

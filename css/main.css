@@ -32,3 +32,10 @@ html,body /* HTML and body style */
     flex-direction: column;
     overflow: hidden;
 }
+
+/* Add this wrapper class to whatever parent HTML element wraps your three toolbars */
+.toolbar-container-wrapper {
+    position: relative;
+    min-height: 45px; /* Adjust this to match the actual height of your toolbars so the page doesn't collapse */
+    width: 100%;
+}

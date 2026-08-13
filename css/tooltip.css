@@ -2,6 +2,11 @@
     width: 100%;
     margin-top: 20px;
     box-sizing: border-box;
+    
+    /* Clean static styling */
+    background-color: rgba(216, 1, 199, 0.666);
+    padding: 8px 8px;
+    box-shadow: 0 2px 6px rgba(216, 1, 199, 0.666);
 }
 
 .tooltip-item-class {
@@ -9,7 +14,9 @@
     padding: 8px 0px;
     font-size: 16px;
     line-height: 1.2;
-    background-color: #747276;
+    background-color: #1e0637;
     color: #ffffff;
     text-align: center; /* Optional: centers your tip text */
+
+
 }
