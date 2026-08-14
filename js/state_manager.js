@@ -1,11 +1,12 @@
 // js/state_manager.js
 
 export class StateManager {
-    constructor(maxStackSize = 20, onStateChange = null) {
+    constructor(maxStackSize = 20, onStateChange = null, gridManager = null) {
         this.undoStack = [];
         this.redoStack = [];
         this.maxStackSize = maxStackSize;
         this.onStateChange = onStateChange; // Callback for UI updates
+        this.gridManager = gridManager; // Reference to grid manager to protect grid items
         
         this.initKeyboardShortcuts();
     }
@@ -51,8 +52,6 @@ export class StateManager {
     // Helper to safely cancel active paper tools or selections so objects don't stick
     _cancelActiveInteractions() {
         if (window.paper && window.paper.tool) {
-            // Fire a faux mouseup or deactivate current tool if it supports it, 
-            // or clear project selection to detach dangling items
             window.paper.project.deselectAll();
         }
     }
@@ -127,10 +126,20 @@ export class StateManager {
 
     clear() {
         this._cancelActiveInteractions();
-        window.paper.project.clear();
-        this.saveState();
-        this.redoStack = [];
         
-        if (this.onStateChange) this.onStateChange();
+        if (window.paper && window.paper.project) {
+            // Remove all children from the active layer except the grid group (if referenced)
+            const activeLayer = window.paper.project.activeLayer;
+            if (activeLayer) {
+                const gridGroup = this.gridManager ? this.gridManager.gridGroup : null;
+                activeLayer.children.slice().forEach(item => {
+                    if (!gridGroup || item !== gridGroup) {
+                        item.remove();
+                    }
+                });
+            }
+        }
+
+        this.saveState();
     }
 }

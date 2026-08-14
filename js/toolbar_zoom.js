@@ -1,4 +1,3 @@
-// js/toolbar_zoom.js
 export class ZoomManager 
 {
     // Class instance
@@ -25,9 +24,29 @@ export class ZoomManager
         this.initInteractiveZoomListeners();
     }
 
+    // Helper method to check if the PAN button is currently active
+    isPanActive() 
+    {
+        const panBtn = document.getElementById('toolbar-main-pan-btn');
+        if (!panBtn) return true; // Fallback if button doesn't exist yet
+        
+        return panBtn.classList.contains('active') || panBtn.getAttribute('aria-pressed') === 'true';
+    }
+
     // Element listeners
     initListeners() 
     {
+        const panBtn = document.getElementById('toolbar-main-pan-btn');
+        if (panBtn) {
+            panBtn.addEventListener('click', () => {
+                const isActive = panBtn.classList.toggle('active');
+                panBtn.setAttribute('aria-pressed', isActive);
+                if (this.tooltip) {
+                    this.tooltip.innerText = isActive ? "Pan mode enabled." : "Pan mode disabled.";
+                }
+            });
+        }
+
         // Button element listeners
         const zoomInBtn = document.getElementById('toolbar-main-zoom-in-btn');
         const zoomOutBtn = document.getElementById('toolbar-main-zoom-out-btn');
@@ -73,36 +92,40 @@ export class ZoomManager
         const canvas = this.view.element;
         if (!canvas) return;
 
-        // 1. Scroll-to-Zoom (Mouse Wheel)
+        // 1. Scroll-to-Zoom (Mouse Wheel) -> Locked behind the PAN button
         canvas.addEventListener('wheel', (event) => 
         {
+            if (!this.isPanActive()) return;
+
             event.preventDefault();
 
             const oldZoom = this.view.zoom;
-            // Determine zoom direction
             const zoomFactor = event.deltaY < 0 ? 1.1 : 1 / 1.1;
             const newZoom = Math.min(Math.max(oldZoom * zoomFactor, this.minZoom), this.maxZoom);
 
             if (newZoom === oldZoom) return;
 
-            // Get mouse position relative to canvas and convert to Paper.js project coordinates
             const rect = canvas.getBoundingClientRect();
             const mouseX = event.clientX - rect.left;
             const mouseY = event.clientY - rect.top;
             const mousePosition = this.view.viewToProject(new paper.Point(mouseX, mouseY));
 
-            // Apply zoom
             this.view.zoom = newZoom;
-
-            // Adjust center so point under mouse stays anchored
             this.view.center = this.view.center.add(mousePosition.subtract(this.view.center).multiply(1 - (oldZoom / newZoom)));
 
             this.updateButtonStates();
         }, { passive: false });
 
-        // 2. Pinch-to-Zoom (Touch Devices)
+        // 2. Pinch-to-Zoom (Touch Devices) -> Strictly locked behind the PAN button
         canvas.addEventListener('touchstart', (event) => 
         {
+            if (!this.isPanActive()) 
+            {
+                this.initialPinchDistance = null;
+                this.pinchCenter = null;
+                return;
+            }
+
             if (event.touches.length === 2) 
             {
                 const t1 = event.touches[0];
@@ -120,6 +143,13 @@ export class ZoomManager
 
         canvas.addEventListener('touchmove', (event) => 
         {
+            if (!this.isPanActive()) 
+            {
+                this.initialPinchDistance = null;
+                this.pinchCenter = null;
+                return;
+            }
+
             if (event.touches.length === 2 && this.initialPinchDistance) 
             {
                 event.preventDefault();
@@ -136,7 +166,6 @@ export class ZoomManager
                 const oldZoom = this.view.zoom;
                 this.view.zoom = newZoom;
 
-                // Anchor zoom around the initial pinch center
                 this.view.center = this.view.center.add(this.pinchCenter.subtract(this.view.center).multiply(1 - (oldZoom / newZoom)));
 
                 this.updateButtonStates();

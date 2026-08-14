@@ -5,15 +5,20 @@ import { NoteManager } from './toolbar_notes.js';
 import { StateManager } from './state_manager.js';
 import { ShareManager } from './share_manager.js';
 import { UIManager } from './ui_manager.js';
-
-const stateManager = new StateManager(20); // 20 levels of undo and redo
+import { GridManager } from './grid_manager.js';
 
 window.onload = function() {
-
     window.paper.setup('courseCanvas');
     
+    // Initialize GridManager first so it exists for the other managers
+    const gridManager = new GridManager(window.paper.view, 40); // 40 pixel spacing
+
+    // Pass gridManager into StateManager so clear() can protect the grid
+    const stateManager = new StateManager(20, null, gridManager); 
+
     const zoomManager = new ZoomManager(window.paper.view);
-    const coneManager = new ConeManager(() => stateManager.saveState());
+    // Pass gridManager into ConeManager so it can filter out grid hit-tests
+    const coneManager = new ConeManager(() => stateManager.saveState(), gridManager);
     const pathManager = new PathManager(() => stateManager.saveState());
     const noteManager = new NoteManager(() => stateManager.saveState());
     const shareManager = new ShareManager('toolbar-main-save-btn');

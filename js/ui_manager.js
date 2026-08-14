@@ -78,31 +78,52 @@ export class UIManager {
 
         if (this.btnPath) {
             this.btnPath.addEventListener('click', () => {
-                this.tooltip.innerText = "Press and drag to draw the skating line.";
-                this.pathManager.activate();
-                this.btnPath.classList.add('active');
-                if (this.btnCone) this.btnCone.classList.remove('active');
-                if (this.btnNote) this.btnNote.classList.remove('active');
+                if (this.btnPath.classList.contains('active')) {
+                    // Toggle off
+                    this.btnPath.classList.remove('active');
+                    if (this.emptyTool) this.emptyTool.activate();
+                    if (this.tooltip) this.tooltip.innerText = "Tool deactivated.";
+                } else {
+                    this.tooltip.innerText = "Press and drag to draw the skating line.";
+                    this.pathManager.activate();
+                    this.btnPath.classList.add('active');
+                    if (this.btnCone) this.btnCone.classList.remove('active');
+                    if (this.btnNote) this.btnNote.classList.remove('active');
+                }
             });
         }
 
         if (this.btnCone) {
             this.btnCone.addEventListener('click', () => {
-                this.tooltip.innerText = "Click to add a cone. Click and drag to move an existing cone.";
-                this.coneManager.activate();
-                this.btnCone.classList.add('active');
-                if (this.btnPath) this.btnPath.classList.remove('active');
-                if (this.btnNote) this.btnNote.classList.remove('active');
+                if (this.btnCone.classList.contains('active')) {
+                    // Toggle off
+                    this.btnCone.classList.remove('active');
+                    if (this.emptyTool) this.emptyTool.activate();
+                    if (this.tooltip) this.tooltip.innerText = "Tool deactivated.";
+                } else {
+                    this.tooltip.innerText = "Click to add a cone. Click and drag to move an existing cone.";
+                    this.coneManager.activate();
+                    this.btnCone.classList.add('active');
+                    if (this.btnPath) this.btnPath.classList.remove('active');
+                    if (this.btnNote) this.btnNote.classList.remove('active');
+                }
             });
         }
 
         if (this.btnNote) {
             this.btnNote.addEventListener('click', () => {
-                this.tooltip.innerText = "Click to type the note. Click and drag to move an existing note.";
-                this.noteManager.activate();
-                this.btnNote.classList.add('active');
-                if (this.btnPath) this.btnPath.classList.remove('active');
-                if (this.btnCone) this.btnCone.classList.remove('active');
+                if (this.btnNote.classList.contains('active')) {
+                    // Toggle off
+                    this.btnNote.classList.remove('active');
+                    if (this.emptyTool) this.emptyTool.activate();
+                    if (this.tooltip) this.tooltip.innerText = "Tool deactivated.";
+                } else {
+                    this.tooltip.innerText = "Click to type the note. Click and drag to move an existing note.";
+                    this.noteManager.activate();
+                    this.btnNote.classList.add('active');
+                    if (this.btnPath) this.btnPath.classList.remove('active');
+                    if (this.btnCone) this.btnCone.classList.remove('active');
+                }
             });
         }
 
@@ -140,8 +161,8 @@ export class UIManager {
         }
 
         // Default empty tool activation
-        var emptyTool = new window.paper.Tool();
-        emptyTool.activate();
+        this.emptyTool = new window.paper.Tool();
+        this.emptyTool.activate();
     }
 
     updateHistoryButtons() {
