@@ -5,6 +5,7 @@ export class UIManager {
         this.pathManager = managers.pathManager;
         this.coneManager = managers.coneManager;
         this.noteManager = managers.noteManager;
+        this.gridManager = managers.gridManager; // <-- Added gridManager reference
         this.stateManager = stateManager;
 
         this.tooltip = document.getElementById('tooltip_item-id');
@@ -40,6 +41,7 @@ export class UIManager {
                 this.tooltip.innerText = "Zoom in, out or reset the zoom.";
                 mainToolbar.classList.toggle('toolbar-hidden');
                 zoomToolbar.classList.toggle('zoomtoolbar-hidden');
+
             });
         }
 
@@ -131,6 +133,12 @@ export class UIManager {
             this.clearButton.addEventListener('click', () => {
                 this.tooltip.innerText = "Course clear!";
                 this.stateManager.clear();
+                
+                // Redraw grid so it stays in place when clearing the canvas data
+                if (this.gridManager) {
+                    this.gridManager.drawGrid();
+                }
+
                 this.updateHistoryButtons();
             });
         }

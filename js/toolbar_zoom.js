@@ -1,3 +1,5 @@
+// zoom_manager.js
+
 export class ZoomManager 
 {
     // Class instance
@@ -5,6 +7,7 @@ export class ZoomManager
     {
         // Class instance properties
         this.view = view;
+        this.gridManager = null; // Can be linked later or via setter
         this.defaultZoom = view.zoom;
         this.defaultCenter = view.center.clone();
         this.oldSize = view.size.clone();
@@ -14,14 +17,46 @@ export class ZoomManager
 
         this.tooltip = document.getElementById('tooltip_item-id');
         
-        // Touch pinch states
+        // Touch interaction states
         this.initialPinchDistance = null;
         this.initialZoom = 1;
         this.pinchCenter = null;
+
+        // One-finger pan touch tracking states
+        this.isPanning = false;
+        this.lastTouchPosition = null;
+
+        // Desktop mouse pan tracking states
+        this.isMouseDragging = false;
+        this.lastMousePosition = null;
         
         this.initListeners();
         this.initResizeHandler();
         this.initInteractiveZoomListeners();
+    }
+
+    // Link your GridManager here
+    setGridManager(gridManager) {
+        this.gridManager = gridManager;
+    }
+
+    // Centralized helper to update zoom, position, and refresh the grid
+    _applyZoom(newZoom, newCenter = null) {
+        const oldZoom = this.view.zoom;
+        if (newZoom === oldZoom) return;
+
+        this.view.zoom = newZoom;
+
+        if (newCenter) {
+            this.view.center = this.view.center.add(newCenter.subtract(this.view.center).multiply(1 - (oldZoom / newZoom)));
+        }
+
+        // Redraw grid so lines match new bounds and thickness adjusts
+        if (this.gridManager) {
+            this.gridManager.drawGrid();
+        }
+
+        this.updateButtonStates();
     }
 
     // Helper method to check if the PAN button is currently active
@@ -59,7 +94,6 @@ export class ZoomManager
             {
                 if (this.tooltip) this.tooltip.innerText = "Zoomed back to the default view.";
                 this.resetZoom();
-                this.updateButtonStates();
             });
         }
 
@@ -70,7 +104,6 @@ export class ZoomManager
             {
                 if (this.tooltip) this.tooltip.innerText = "View has been zoomed in.";
                 this.zoomIn();
-                this.updateButtonStates();
             });
         }
 
@@ -81,12 +114,11 @@ export class ZoomManager
             {
                 if (this.tooltip) this.tooltip.innerText = "View has been zoomed out.";
                 this.zoomOut();
-                this.updateButtonStates();
             });
         }
     }
 
-    // Attach wheel and touch event listeners to the canvas element
+    // Attach wheel, mouse, and touch event listeners to the canvas element
     initInteractiveZoomListeners() 
     {
         const canvas = this.view.element;
@@ -110,24 +142,63 @@ export class ZoomManager
             const mouseY = event.clientY - rect.top;
             const mousePosition = this.view.viewToProject(new paper.Point(mouseX, mouseY));
 
-            this.view.zoom = newZoom;
-            this.view.center = this.view.center.add(mousePosition.subtract(this.view.center).multiply(1 - (oldZoom / newZoom)));
-
-            this.updateButtonStates();
+            this._applyZoom(newZoom, mousePosition);
         }, { passive: false });
 
-        // 2. Pinch-to-Zoom (Touch Devices) -> Strictly locked behind the PAN button
+        // 2. Desktop Mouse Drag Pan (Left Click Hold & Move) -> Locked behind PAN button
+        canvas.addEventListener('mousedown', (event) => 
+        {
+            // Only respond to left-click (button 0) and if Pan mode is active
+            if (event.button !== 0 || !this.isPanActive()) return;
+
+            this.isMouseDragging = true;
+            this.lastMousePosition = new paper.Point(event.clientX, event.clientY);
+            canvas.style.cursor = 'grabbing';
+        });
+
+        window.addEventListener('mousemove', (event) => 
+        {
+            if (!this.isMouseDragging) return;
+
+            const currentMousePosition = new paper.Point(event.clientX, event.clientY);
+            const deltaScreen = this.lastMousePosition.subtract(currentMousePosition);
+            
+            // Convert screen offset to project coordinates based on current zoom
+            const deltaProject = deltaScreen.divide(this.view.zoom);
+
+            this.view.center = this.view.center.add(deltaProject);
+            this.lastMousePosition = currentMousePosition;
+
+            // Redraw grid to track camera movement
+            if (this.gridManager) {
+                this.gridManager.drawGrid();
+            }
+        });
+
+        window.addEventListener('mouseup', () => 
+        {
+            if (this.isMouseDragging) {
+                this.isMouseDragging = false;
+                this.lastMousePosition = null;
+                canvas.style.cursor = '';
+            }
+        });
+
+        // 3. Touch Handlers (Pinch-to-zoom with 2 fingers, Pan with 1 finger) -> Locked behind PAN button
         canvas.addEventListener('touchstart', (event) => 
         {
             if (!this.isPanActive()) 
             {
                 this.initialPinchDistance = null;
                 this.pinchCenter = null;
+                this.isPanning = false;
                 return;
             }
 
             if (event.touches.length === 2) 
             {
+                // Switch from panning to pinch zooming
+                this.isPanning = false;
                 const t1 = event.touches[0];
                 const t2 = event.touches[1];
                 const rect = canvas.getBoundingClientRect();
@@ -138,6 +209,12 @@ export class ZoomManager
                 const screenMidX = ((t1.clientX + t2.clientX) / 2) - rect.left;
                 const screenMidY = ((t1.clientY + t2.clientY) / 2) - rect.top;
                 this.pinchCenter = this.view.viewToProject(new paper.Point(screenMidX, screenMidY));
+            } 
+            else if (event.touches.length === 1) 
+            {
+                // Start one-finger pan
+                this.isPanning = true;
+                this.lastTouchPosition = new paper.Point(event.touches[0].clientX, event.touches[0].clientY);
             }
         }, { passive: true });
 
@@ -147,9 +224,11 @@ export class ZoomManager
             {
                 this.initialPinchDistance = null;
                 this.pinchCenter = null;
+                this.isPanning = false;
                 return;
             }
 
+            // Handle 2-finger pinch zoom
             if (event.touches.length === 2 && this.initialPinchDistance) 
             {
                 event.preventDefault();
@@ -161,14 +240,27 @@ export class ZoomManager
                 const scaleFactor = currentDistance / this.initialPinchDistance;
                 
                 const newZoom = Math.min(Math.max(this.initialZoom * scaleFactor, this.minZoom), this.maxZoom);
-                if (newZoom === this.view.zoom) return;
+                
+                this._applyZoom(newZoom, this.pinchCenter);
+            }
+            // Handle 1-finger drag pan
+            else if (event.touches.length === 1 && this.isPanning && this.lastTouchPosition) 
+            {
+                event.preventDefault();
 
-                const oldZoom = this.view.zoom;
-                this.view.zoom = newZoom;
+                const currentTouch = new paper.Point(event.touches[0].clientX, event.touches[0].clientY);
+                const deltaScreen = this.lastTouchPosition.subtract(currentTouch);
+                
+                // Convert screen delta offset to project coordinates based on current zoom
+                const deltaProject = deltaScreen.divide(this.view.zoom);
 
-                this.view.center = this.view.center.add(this.pinchCenter.subtract(this.view.center).multiply(1 - (oldZoom / newZoom)));
+                this.view.center = this.view.center.add(deltaProject);
+                this.lastTouchPosition = currentTouch;
 
-                this.updateButtonStates();
+                // Redraw grid to follow the camera movement
+                if (this.gridManager) {
+                    this.gridManager.drawGrid();
+                }
             }
         }, { passive: false });
 
@@ -178,6 +270,11 @@ export class ZoomManager
             {
                 this.initialPinchDistance = null;
                 this.pinchCenter = null;
+            }
+            if (event.touches.length === 0) 
+            {
+                this.isPanning = false;
+                this.lastTouchPosition = null;
             }
         });
     }
@@ -199,13 +296,18 @@ export class ZoomManager
                     {
                         item.position.x *= scaleX;
                         item.position.y *= scaleY;
-                    } else 
+                    } 
+                    else 
                     {
                         item.scale(scaleX, scaleY, new paper.Point(0, 0));
                     }
                 });
 
                 this.oldSize = this.view.size.clone();
+
+                if (this.gridManager) {
+                    this.gridManager.drawGrid();
+                }
             }, 250); 
         };
     }
@@ -246,10 +348,7 @@ export class ZoomManager
     {
         const oldZoom = this.view.zoom;
         const newZoom = Math.min(oldZoom * factor, this.maxZoom);
-        
-        if (newZoom === oldZoom) return;
-
-        this.view.zoom = newZoom;
+        this._applyZoom(newZoom);
     }
 
     // Zoom out method
@@ -257,18 +356,24 @@ export class ZoomManager
     {
         const oldZoom = this.view.zoom;
         const newZoom = Math.max(oldZoom / factor, this.minZoom);
-
-        if (newZoom === oldZoom) return;
-
-        this.view.zoom = newZoom;
+        this._applyZoom(newZoom);
     }
 
     // Zoom reset method
     resetZoom() 
     {
-        this.view.zoom = this.defaultZoom;
-        if (this.defaultCenter && typeof this.defaultCenter.clone === 'function') {
-            this.view.center = this.defaultCenter.clone();
+        const newZoom = this.defaultZoom;
+        const newCenter = this.defaultCenter ? this.defaultCenter.clone() : null;
+        
+        this.view.zoom = newZoom;
+        if (newCenter) {
+            this.view.center = newCenter;
         }
+
+        if (this.gridManager) {
+            this.gridManager.drawGrid();
+        }
+
+        this.updateButtonStates();
     }
 }
