@@ -140,10 +140,18 @@ export class StateManager {
         this._cancelActiveInteractions();
         
         if (window.paper && window.paper.project) {
-            window.paper.project.clear();
+            // Remove children from the active layer, but skip the grid group!
+            const gridGroup = this.gridManager ? this.gridManager.gridGroup : null;
+            
+            window.paper.project.activeLayer.children.slice().forEach(child => {
+                if (child !== gridGroup) {
+                    child.remove();
+                }
+            });
         }
         
         this._restoreGrid();
         this.saveState();
     }
+
 }

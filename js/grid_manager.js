@@ -106,4 +106,15 @@ constructor(view, spacing = 40)
             this.drawGrid();
         };
     }
+
+    _restoreGrid() {
+    if (this.gridManager) {
+        // 1. Make the grid visible again if it was hidden
+        if (this.gridManager.gridGroup) {
+            this.gridManager.gridGroup.visible = true;
+        }
+        // 2. Trigger the grid manager to redraw the grid lines/dots
+        this.gridManager.drawGrid();
+    }
+}
 }
