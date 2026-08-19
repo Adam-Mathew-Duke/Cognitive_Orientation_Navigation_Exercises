@@ -11,7 +11,16 @@ export class NoteManager {
 
     _initListeners() {
         this.tool.onMouseDown = (event) => {
-            var hitResult = window.paper.project.hitTest(event.point, { fill: true, stroke: true, tolerance: 5 });
+            // Filter the hitTest to ONLY match notes, letting clicks pass through the grid
+            var hitResult = window.paper.project.hitTest(event.point, { 
+                fill: true, 
+                stroke: true, 
+                tolerance: 5,
+                match: (hit) => {
+                    return (hit.item.data && hit.item.data.isNote) || 
+                           (hit.item.parent && hit.item.parent.data && hit.item.parent.data.isNote);
+                }
+            });
             
             if (hitResult && hitResult.item) {
                 var target = hitResult.item;
@@ -20,14 +29,12 @@ export class NoteManager {
                     this.draggedNote = target;
                 } else if (target.parent && target.parent.data && target.parent.data.isNote) {
                     this.draggedNote = target.parent;
-                } else {
-                    this.draggedNote = null; 
                 }
             } else {
-
                 var labelText = prompt("Note text:", "Note");
-                    
-                if (labelText.trim() !== "") {
+                
+                // Added check to ensure user didn't click Cancel (which returns null)
+                if (labelText !== null && labelText.trim() !== "") {
                     var text = new window.paper.PointText({
                         point: [0, 0],
                         content: labelText,

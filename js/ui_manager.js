@@ -5,7 +5,7 @@ export class UIManager {
         this.pathManager = managers.pathManager;
         this.coneManager = managers.coneManager;
         this.noteManager = managers.noteManager;
-        this.gridManager = managers.gridManager; // <-- Added gridManager reference
+        this.gridManager = managers.gridManager;
         this.stateManager = stateManager;
 
         this.tooltip = document.getElementById('tooltip_item-id');
@@ -21,58 +21,66 @@ export class UIManager {
     }
 
     _initListeners() {
-
-        var toolbarToggleBtn = document.getElementById('toolbar-toggle-btn');
         var mainToolbar = document.getElementById('toolbar-main-id');
        
-        var zoomtoolbarToggleBtn = document.getElementById('zoom-toolbar-toggle-btn');
+        // Objects Toolbar
+        var objectsToggleBtn = document.getElementById('objects-toolbar-toggle-btn');
+        var objectsReturnBtn = document.getElementById('objects-toolbar-return-btn');
+        var objectsToolbar = document.getElementById('objectstoolbar-main-id');
+
+        // Zoom Toolbar
+        var zoomToggleBtn = document.getElementById('zoom-toolbar-toggle-btn');
+        var zoomReturnBtn = document.getElementById('zoom-toolbar-return-btn');
         var zoomToolbar = document.getElementById('zoomtoolbar-main-id');
        
-        var historytoolbarToggleBtn = document.getElementById('history-toolbar-toggle-btn');
-        var historytoolbarReturnBtn = document.getElementById('history-toolbar-return-btn');
-
+        // History Toolbar
+        var historyToggleBtn = document.getElementById('history-toolbar-toggle-btn');
+        var historyReturnBtn = document.getElementById('history-toolbar-return-btn');
         var historyToolbar = document.getElementById('historytoolbar-main-id');
 
-        // hide the main menu bar when the zoom toolbar is opened
-        if (toolbarToggleBtn && mainToolbar) 
-        {
-            toolbarToggleBtn.addEventListener('click', () => 
-            {
-                this.tooltip.innerText = "Zoom in, out or reset the zoom.";
+        // Objects Toolbar Toggles
+        if (objectsToggleBtn && mainToolbar && objectsToolbar) {
+            objectsToggleBtn.addEventListener('click', () => {
+                if (this.tooltip) this.tooltip.innerText = "Add a cone.";
                 mainToolbar.classList.toggle('toolbar-hidden');
-                zoomToolbar.classList.toggle('zoomtoolbar-hidden');
-
+                objectsToolbar.classList.toggle('objectstoolbar-hidden');
+            });
+        }
+        if (objectsReturnBtn && mainToolbar && objectsToolbar) {
+            objectsReturnBtn.addEventListener('click', () => {
+                if (this.tooltip) this.tooltip.innerText = "Add a cone, path or note.";
+                mainToolbar.classList.toggle('toolbar-hidden');
+                objectsToolbar.classList.toggle('objectstoolbar-hidden');
             });
         }
 
-        // hide the zoom menu bar when the main toolbar is opened
-        if (zoomtoolbarToggleBtn && zoomToolbar) 
-        {
-            zoomtoolbarToggleBtn.addEventListener('click', () => 
-            {
-                this.tooltip.innerText = "Add a cone, path or note.";
+        // Zoom Toolbar Toggles
+        if (zoomToggleBtn && mainToolbar && zoomToolbar) {
+            zoomToggleBtn.addEventListener('click', () => {
+                if (this.tooltip) this.tooltip.innerText = "Zoom in, out or reset the zoom.";
+                mainToolbar.classList.toggle('toolbar-hidden');
+                zoomToolbar.classList.toggle('zoomtoolbar-hidden');
+            });
+        }
+        if (zoomReturnBtn && mainToolbar && zoomToolbar) {
+            zoomReturnBtn.addEventListener('click', () => {
+                if (this.tooltip) this.tooltip.innerText = "Add a cone, path or note.";
                 mainToolbar.classList.toggle('toolbar-hidden');
                 zoomToolbar.classList.toggle('zoomtoolbar-hidden');
             });
         }
 
-        // hide the main menu bar when the zoom toolbar is opened
-        if (historytoolbarToggleBtn && mainToolbar) 
-        {
-            historytoolbarToggleBtn.addEventListener('click', () => 
-            {
-                this.tooltip.innerText = "Redo or undo an action.";
+        // History Toolbar Toggles
+        if (historyToggleBtn && mainToolbar && historyToolbar) {
+            historyToggleBtn.addEventListener('click', () => {
+                if (this.tooltip) this.tooltip.innerText = "Redo or undo an action.";
                 mainToolbar.classList.toggle('toolbar-hidden');
                 historyToolbar.classList.toggle('historytoolbar-hidden');
             });
         }
-
-        // hide the main menu bar when the zoom toolbar is opened
-        if (historytoolbarReturnBtn && mainToolbar) 
-        {
-            historytoolbarReturnBtn.addEventListener('click', () => 
-            {
-                this.tooltip.innerText = "Add a cone, path or note.";
+        if (historyReturnBtn && mainToolbar && historyToolbar) {
+            historyReturnBtn.addEventListener('click', () => {
+                if (this.tooltip) this.tooltip.innerText = "Add a cone, path or note.";
                 mainToolbar.classList.toggle('toolbar-hidden');
                 historyToolbar.classList.toggle('historytoolbar-hidden');
             });
@@ -81,12 +89,11 @@ export class UIManager {
         if (this.btnPath) {
             this.btnPath.addEventListener('click', () => {
                 if (this.btnPath.classList.contains('active')) {
-                    // Toggle off
                     this.btnPath.classList.remove('active');
                     if (this.emptyTool) this.emptyTool.activate();
                     if (this.tooltip) this.tooltip.innerText = "Tool deactivated.";
                 } else {
-                    this.tooltip.innerText = "Press and drag to draw the skating line.";
+                    if (this.tooltip) this.tooltip.innerText = "Press and drag to draw the skating line.";
                     this.pathManager.activate();
                     this.btnPath.classList.add('active');
                     if (this.btnCone) this.btnCone.classList.remove('active');
@@ -98,12 +105,11 @@ export class UIManager {
         if (this.btnCone) {
             this.btnCone.addEventListener('click', () => {
                 if (this.btnCone.classList.contains('active')) {
-                    // Toggle off
                     this.btnCone.classList.remove('active');
                     if (this.emptyTool) this.emptyTool.activate();
                     if (this.tooltip) this.tooltip.innerText = "Tool deactivated.";
                 } else {
-                    this.tooltip.innerText = "Click to add a cone. Click and drag to move an existing cone.";
+                    if (this.tooltip) this.tooltip.innerText = "Click to add a cone. Click and drag to move an existing cone.";
                     this.coneManager.activate();
                     this.btnCone.classList.add('active');
                     if (this.btnPath) this.btnPath.classList.remove('active');
@@ -115,12 +121,11 @@ export class UIManager {
         if (this.btnNote) {
             this.btnNote.addEventListener('click', () => {
                 if (this.btnNote.classList.contains('active')) {
-                    // Toggle off
                     this.btnNote.classList.remove('active');
                     if (this.emptyTool) this.emptyTool.activate();
                     if (this.tooltip) this.tooltip.innerText = "Tool deactivated.";
                 } else {
-                    this.tooltip.innerText = "Click to type the note. Click and drag to move an existing note.";
+                    if (this.tooltip) this.tooltip.innerText = "Click to type the note. Click and drag to move an existing note.";
                     this.noteManager.activate();
                     this.btnNote.classList.add('active');
                     if (this.btnPath) this.btnPath.classList.remove('active');
@@ -131,10 +136,9 @@ export class UIManager {
 
         if (this.clearButton) {
             this.clearButton.addEventListener('click', () => {
-                this.tooltip.innerText = "Course clear!";
+                if (this.tooltip) this.tooltip.innerText = "Course clear!";
                 this.stateManager.clear();
                 
-                // Redraw grid so it stays in place when clearing the canvas data
                 if (this.gridManager) {
                     this.gridManager.drawGrid();
                 }
@@ -145,7 +149,7 @@ export class UIManager {
 
         if (this.undoButton) {
             this.undoButton.addEventListener('click', () => {
-                this.tooltip.innerText = "Action is undone.";
+                if (this.tooltip) this.tooltip.innerText = "Action is undone.";
                 if (this.stateManager.undo()) {
                     this.updateHistoryButtons();
                 }
@@ -154,41 +158,30 @@ export class UIManager {
 
         if (this.redoButton) {
             this.redoButton.addEventListener('click', () => {
-                this.tooltip.innerText = "Action is redone.";
+                if (this.tooltip) this.tooltip.innerText = "Action is redone.";
                 if (this.stateManager.redo()) {
                     this.updateHistoryButtons();
                 }
             });
         }
 
-        // Hook into StateManager's onStateChange callback so shortcut keys (Ctrl+Z / Ctrl+Y) automatically update buttons
         if (this.stateManager) {
             this.stateManager.onStateChange = () => {
                 this.updateHistoryButtons();
             };
         }
 
-        // Default empty tool activation
         this.emptyTool = new window.paper.Tool();
         this.emptyTool.activate();
     }
 
     updateHistoryButtons() {
         if (this.undoButton) {
-            // Undo needs at least 2 states to go back (current + previous)
-            if (this.stateManager.undoStack.length > 1) {
-                this.undoButton.removeAttribute('disabled');
-            } else {
-                this.undoButton.setAttribute('disabled', 'true');
-            }
+            this.undoButton.disabled = !(this.stateManager.undoStack.length > 1);
         }
 
         if (this.redoButton) {
-            if (this.stateManager.redoStack.length > 0) {
-                this.redoButton.removeAttribute('disabled');
-            } else {
-                this.redoButton.setAttribute('disabled', 'true');
-            }
+            this.redoButton.disabled = !(this.stateManager.redoStack.length > 0);
         }
     }
 }

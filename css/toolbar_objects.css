@@ -1,0 +1,42 @@
+/* objectstoolbar.css */
+
+.objectstoolbar-main-class {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    padding: 2px;
+    border-radius: 2px;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+}
+
+.objectstoolbar-btn {
+    width: auto;
+    flex: 1 1 auto; /* Allows buttons to shrink and grow fluidly */
+    min-width: 60px; /* Keeps the buttons from getting squished (quish that cat) */
+    padding: 4px 8px;
+    font-size: 16px;
+    margin-bottom: 0;
+    line-height: 1.2;
+    background-color: #095107 !important;
+    border-color: #ffffff !important;
+    color: #ffffff !important;
+}
+
+.objectstoolbar-hidden {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+}

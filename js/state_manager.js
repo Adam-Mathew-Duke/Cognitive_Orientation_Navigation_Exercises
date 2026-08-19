@@ -8,6 +8,8 @@ export class StateManager {
         this.onStateChange = onStateChange; 
         this.gridManager = gridManager; 
         
+        this.isPerformingHistoryAction = false;
+        
         this.initKeyboardShortcuts();
     }
 
@@ -27,7 +29,7 @@ export class StateManager {
             if ((code === 'KeyZ' || key === 'z') && !isShift) {
                 event.preventDefault();
                 this.undo();
-            } else if ((code === 'KeyY' || key === 'y')) {
+            } else if ((code === 'KeyKeyY' || code === 'y')) {
                 event.preventDefault();
                 this.redo();
             }
@@ -40,20 +42,30 @@ export class StateManager {
         }
     }
 
-    // Hide grid temporarily instead of destroying/removing it
     _removeGridFromCanvas() {
         if (this.gridManager && this.gridManager.gridGroup) {
             this.gridManager.gridGroup.visible = false;
         }
     }
 
-    // Show grid again and ensure it's updated
     _restoreGrid() {
         if (this.gridManager) {
             if (this.gridManager.gridGroup) {
                 this.gridManager.gridGroup.visible = true;
             }
             this.gridManager.drawGrid();
+        }
+    }
+
+    // Helper to clear user drawings without destroying the grid reference
+    _clearCanvasKeepGrid() {
+        if (window.paper && window.paper.project) {
+            const gridGroup = this.gridManager ? this.gridManager.gridGroup : null;
+            window.paper.project.activeLayer.children.slice().forEach(child => {
+                if (child !== gridGroup) {
+                    child.remove();
+                }
+            });
         }
     }
 
@@ -73,7 +85,10 @@ export class StateManager {
             if (this.undoStack.length > this.maxStackSize) {
                 this.undoStack.shift();
             }
-            this.redoStack = [];
+            
+            if (!this.isPerformingHistoryAction) {
+                this.redoStack = [];
+            }
 
             if (this.onStateChange) this.onStateChange();
         }
@@ -86,7 +101,7 @@ export class StateManager {
                 this._cancelActiveInteractions();
                 var jsonString = decodeURIComponent(hash);
                 
-                window.paper.project.clear();
+                this._clearCanvasKeepGrid();
                 window.paper.project.importJSON(jsonString);
                 
                 this._restoreGrid();
@@ -106,13 +121,22 @@ export class StateManager {
     undo() {
         if (this.undoStack.length > 1) {
             this._cancelActiveInteractions();
-            this.undoStack.pop(); // remove current
-            var previousState = this.undoStack[this.undoStack.length - 1];
             
-            window.paper.project.clear();
-            window.paper.project.importJSON(previousState);
-            
-            this._restoreGrid();
+            this.isPerformingHistoryAction = true;
+            try {
+                var currentState = this.undoStack.pop();
+                this.redoStack.push(currentState);
+
+                var previousState = this.undoStack[this.undoStack.length - 1];
+                
+                // Use safe clear instead of project.clear() so grid stays intact
+                this._clearCanvasKeepGrid();
+                window.paper.project.importJSON(previousState);
+                
+                this._restoreGrid();
+            } finally {
+                this.isPerformingHistoryAction = false;
+            }
 
             if (this.onStateChange) this.onStateChange();
             return true;
@@ -122,13 +146,19 @@ export class StateManager {
 
     redo() {
         if (this.redoStack.length > 0) {
-            var nextState = this.redoStack.pop();
-            this.undoStack.push(nextState);
-            
-            window.paper.project.clear();
-            window.paper.project.importJSON(nextState);
-            
-            this._restoreGrid();
+            this.isPerformingHistoryAction = true;
+            try {
+                var nextState = this.redoStack.pop();
+                this.undoStack.push(nextState);
+                
+                // Use safe clear instead of project.clear() so grid stays intact
+                this._clearCanvasKeepGrid();
+                window.paper.project.importJSON(nextState);
+                
+                this._restoreGrid();
+            } finally {
+                this.isPerformingHistoryAction = false;
+            }
 
             if (this.onStateChange) this.onStateChange();
             return true;
@@ -138,20 +168,8 @@ export class StateManager {
 
     clear() {
         this._cancelActiveInteractions();
-        
-        if (window.paper && window.paper.project) {
-            // Remove children from the active layer, but skip the grid group!
-            const gridGroup = this.gridManager ? this.gridManager.gridGroup : null;
-            
-            window.paper.project.activeLayer.children.slice().forEach(child => {
-                if (child !== gridGroup) {
-                    child.remove();
-                }
-            });
-        }
-        
+        this._clearCanvasKeepGrid();
         this._restoreGrid();
         this.saveState();
     }
-
 }

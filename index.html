@@ -5,6 +5,7 @@
         <link rel="stylesheet" href="css/main.css">
         <link rel="stylesheet" href="css/canvas_course.css">
         <link rel="stylesheet" href="css/toolbar_main.css">
+        <link rel="stylesheet" href="css/toolbar_objects.css">
         <link rel="stylesheet" href="css/toolbar_zoom.css">  
         <link rel="stylesheet" href="css/toolbar_history.css">
         <link rel="stylesheet" href="css/tooltip.css">      
@@ -15,189 +16,189 @@
 
     <!-- Tool tips -->
     <div class="tooltip-container-class" id="tooltip-container-id" style="display: flex; align-items: center; gap: 8px;">
-    <!-- Text container that your JavaScript can target safely without ever touching the icon -->
-    <div class="tooltip-item-class">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink: 0;">
-    <path d="M4 4V16C4 17.1046 4.89543 18 6 18H18" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M4 11H15" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
-    <circle cx="8" cy="21" r="2" stroke="#e20cb7" stroke-width="2"/>
-    <circle cx="16" cy="21" r="2" stroke="#e20cb7" stroke-width="2"/>
-    <path d="M10 21H14" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
-    </svg>
-    <span id="tooltip_item-id">Add a cone, path or note.</span>
-    </div>
-    
-    </div>
-
-        <!-- Course canvas -->
-        <div class="course-class" id="course-id">
-            <canvas id="courseCanvas" resize="true"></canvas>
+        <div class="tooltip-item-class">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink: 0;">
+                <path d="M4 4V16C4 17.1046 4.89543 18 6 18H18" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M4 11H15" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="8" cy="21" r="2" stroke="#e20cb7" stroke-width="2"/>
+                <circle cx="16" cy="21" r="2" stroke="#e20cb7" stroke-width="2"/>
+                <path d="M10 21H14" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span id="tooltip_item-id">Add a cone, path or note.</span>
         </div>
+    </div>
 
-            <!-- Toolbar absolute positioning to help with CSS trans -->
-            <div class="toolbar-container-wrapper">
+    <!-- Course canvas -->
+    <div class="course-class" id="course-id">
+        <canvas id="courseCanvas" resize="true"></canvas>
+    </div>
 
-                <!-- Main toolbar -->
-                <div class ="toolbar-main-class" id="toolbar-main-id">
+    <!-- Toolbar absolute positioning to help with CSS trans -->
+    <div class="toolbar-container-wrapper">
 
-                    <!-- Add Cone button -->
-                    <button id="toolbar-main-btn-cone" class="toolbar-btn" title="Add Cone">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="12" cy="12" r="10" stroke="#ff04fb59" stroke-width="2" fill="#ff04fb" fill-opacity="1"/>
-                            <circle cx="12" cy="12" r="4.5" fill="#e20cb7" stroke="#ffffff" stroke-width="1.5"/>
-                        </svg>
-                        <span>Cone</span>
-                    </button>
+        <!-- Main toolbar -->
+        <div class="toolbar-main-class" id="toolbar-main-id">
 
-                    <!-- Add Path button -->
-                    <button id="toolbar-main-btn-path" class="toolbar-btn" title="Draw Path">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M4 16C8 16 9 8 14 10C19 12 18 20 20 20" stroke="#ff04fb59" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M4 16C8 16 9 8 14 10C19 12 18 20 20 20" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        <span>Path</span>
-                    </button>
+            <!-- Objects toolbar toggle button -->
+            <button id="objects-toolbar-toggle-btn" class="toolbar-btn" title="Objects Toolbar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="#ff04fb59" stroke-width="2" fill="#ff04fb" fill-opacity="1"/>
+                    <circle cx="12" cy="12" r="4.5" fill="#e20cb7" stroke="#ffffff" stroke-width="1.5"/>
+                </svg>
+                <span>Objects</span>
+            </button>
 
-                    <!-- Add Note button -->
-                    <button id="toolbar-main-btn-note" class="toolbar-btn" title="Add Note">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="5" y="3" width="14" height="18" rx="2" stroke="#ff04fb59" stroke-width="2" fill="#ff04fb" fill-opacity="0.15"/>
-                            <line x1="8" y1="8" x2="16" y2="8" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
-                            <line x1="8" y1="12" x2="16" y2="12" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
-                            <line x1="8" y1="16" x2="12" y2="16" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                            <span>Note</span>
-                    </button>
+            <!-- Add Path button -->
+            <button id="toolbar-main-btn-path" class="toolbar-btn" title="Draw Path">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 16C8 16 9 8 14 10C19 12 18 20 20 20" stroke="#ff04fb59" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M4 16C8 16 9 8 14 10C19 12 18 20 20 20" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Path</span>
+            </button>
 
-                    <!-- Zoom toolbar button -->
-                    <button id="toolbar-toggle-btn" class="toolbar-btn" title="ZoomToolbar">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Add Note button -->
+            <button id="toolbar-main-btn-note" class="toolbar-btn" title="Add Note">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="5" y="3" width="14" height="18" rx="2" stroke="#ff04fb59" stroke-width="2" fill="#ff04fb" fill-opacity="0.15"/>
+                    <line x1="8" y1="8" x2="16" y2="8" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="8" y1="12" x2="16" y2="12" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="8" y1="16" x2="12" y2="16" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span>Note</span>
+            </button>
+
+            <!-- Zoom toolbar toggle button -->
+            <button id="zoom-toolbar-toggle-btn" class="toolbar-btn" title="Zoom Toolbar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="10.5" cy="10.5" r="7.5" stroke="#e20cb7" stroke-width="2"/>
                     <line x1="16" y1="16" x2="22" y2="22" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
                     <line x1="10.5" y1="7.5" x2="10.5" y2="13.5" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
                     <line x1="7.5" y1="10.5" x2="13.5" y2="10.5" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                    <span>Zoom</span>
-                    </button>
-
-                    <!-- History toolbar button -->
-                    <button id="history-toolbar-toggle-btn" class="toolbar-btn" title="HistoryToolbar">
-                    <svg width="30" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M15 5H17C18.6569 5 20 6.34315 20 8V16C20 17.6569 18.6569 19 17 19H7C5.34315 19 4 17.6569 4 16V8C4 6.34315 5.34315 5 7 5H9" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/> <!-- Faded when disabled -->
-                    <path d="M16 9L19 5L22 9" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/> <!-- Faded when disabled -->
-                    <span>History</span>
-                    </svg>
-                    </button>
-
-                    <!-- Clear Course button -->
-                    <button id="toolbar-main-clear-btn" class="toolbar-btn" title="Clear All">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3 6h18" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M8 6V4h8v2" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0v12h8V6" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                        <span>Clear</span>
-                    </button>
-
-                    <!--Save URL button -->
-                    <button id="toolbar-main-save-btn" class="toolbar-btn" title="Copy URL State">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <polyline points="16 18 22 12 16 6" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <polyline points="8 6 2 12 8 18" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <line x1="14" y1="4" x2="10" y2="20" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                        <span>Save</span>
-                    </button>
-                </div>
-
-                <!-- Zoom toolbar -->
-                <div class="toolbar-main-class zoomtoolbar-hidden" id="zoomtoolbar-main-id">
-
-                <!-- Zoom In button -->
-                <button id="toolbar-main-zoom-in-btn" class="zoomtoolbar-btn" title="Zoom In">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="10.5" cy="10.5" r="7.5" stroke="#e20cb7" stroke-width="2"/>
-                <line x1="16" y1="16" x2="22" y2="22" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
-                <line x1="10.5" y1="7.5" x2="10.5" y2="13.5" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
-                <line x1="7.5" y1="10.5" x2="13.5" y2="10.5" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
                 </svg>
-                <span>Zoom In</span>
-                </button>
+                <span>Zoom</span>
+            </button>
 
-                <!-- Zoom Out button -->
-                <button id="toolbar-main-zoom-out-btn" class="zoomtoolbar-btn" title="Zoom Out">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="10.5" cy="10.5" r="7.5" stroke="#e20cb7" stroke-width="2"/>
-                <line x1="16" y1="16" x2="22" y2="22" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
-                <line x1="7.5" y1="10.5" x2="13.5" y2="10.5" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                <span>Zoom Out</span>
-                </button>
-
-                <!-- Zoom Default button -->
-                <button id="toolbar-main-zoom-default-btn" class="zoomtoolbar-btn" title="Reset Zoom">
-                <svg width="25" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="3" stroke="#e20cb7" stroke-width="2"/>
-                <circle cx="12" cy="12" r="9" stroke="#e20cb7" stroke-width="2" stroke-dasharray="3 3"/>
-                <path d="M12 3V1" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
-                <path d="M12 21V19" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
-                <path d="M3 12H1" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
-                <path d="M21 12H19" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                <span>Reset Zoom</span>
-                </button>
-
-                <!-- PAN button (Enables Pinch-to-Zoom) -->
-                <button id="toolbar-main-pan-btn" class="zoomtoolbar-btn" title="Pan Mode" aria-pressed="false">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M18 11V6C18 4.89543 17.1046 4 16 4C14.8954 4 14 4.89543 14 6V11" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M14 9.5V5C14 3.89543 13.1046 3 12 3C10.8954 3 10 3.89543 10 5V11.5" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M10 10.5V7C10 5.89543 9.10457 5 8 5C6.89543 5 6 5.89543 6 7V13.5C6 16.5376 8.46243 19 11.5 19H12.5C15.5376 19 18 16.5376 18 13.5V13" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span>Pan</span>
-                </button>
-
-                <!-- Toggle / Return button -->
-                <button class="zoomtoolbar-btn" title="ZoomToolbar" id="zoom-toolbar-toggle-btn">
+            <!-- History toolbar toggle button -->
+            <button id="history-toolbar-toggle-btn" class="toolbar-btn" title="History Toolbar">
                 <svg width="30" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 19L5 15L9 11" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M5 15H15C17.7614 15 20 12.7614 20 10V9" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M15 5H17C18.6569 5 20 6.34315 20 8V16C20 17.6569 18.6569 19 17 19H7C5.34315 19 4 17.6569 4 16V8C4 6.34315 5.34315 5 7 5H9" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+                    <path d="M16 9L19 5L22 9" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
                 </svg>
-                <span>Return</span>
-                </button>
+                <span>History</span>
+            </button>
 
-                </div>
+            <!-- Clear Course button -->
+            <button id="toolbar-main-clear-btn" class="toolbar-btn" title="Clear All">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 6h18" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M8 6V4h8v2" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0v12h8V6" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span>Clear</span>
+            </button>
 
-                <!-- History toolbar -->
-                <div class ="toolbar-main-class historytoolbar-hidden" id="historytoolbar-main-id">
+            <!-- Save URL button -->
+            <button id="toolbar-main-save-btn" class="toolbar-btn" title="Copy URL State">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <polyline points="16 18 22 12 16 6" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <polyline points="8 6 2 12 8 18" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <line x1="14" y1="4" x2="10" y2="20" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span>Save</span>
+            </button>
+        </div>
 
-                    <!-- Redo Action button -->
-                    <button id="toolbar-main-redo-btn" class="historytoolbar-btn" title="Redo">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M15 5H17C18.6569 5 20 6.34315 20 8V16C20 17.6569 18.6569 19 17 19H7C5.34315 19 4 17.6569 4 16V8C4 6.34315 5.34315 5 7 5H9" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/> <!-- Faded when disabled -->
-                    <path d="M16 9L19 5L22 9" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/> <!-- Faded when disabled -->
-                    <span>Redo Action</span>
-                    </svg>
-                    </button>
-
-                    <!-- Undo Action button -->
-                    <button id="toolbar-main-undo-btn" class="historytoolbar-btn" title="Undo">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9 5H7C5.34315 5 4 6.34315 4 8V16C4 17.6569 5.34315 19 7 19H17C18.6569 19 20 17.6569 20 16V8C20 6.34315 18.6569 5 17 5H15" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M8 9L5 5L2 9" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <span>Undo Action</span>
-                    </button>
-
-                    <button class="historytoolbar-btn" title="HistoryToolbar" id="history-toolbar-return-btn">
-                    <svg width="30" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Objects toolbar -->
+        <div class="toolbar-main-class objectstoolbar-hidden" id="objectstoolbar-main-id">
+            <button id="toolbar-main-btn-cone" class="toolbar-btn" title="Add Cone">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="#ff04fb59" stroke-width="2" fill="#ff04fb" fill-opacity="1"/>
+                    <circle cx="12" cy="12" r="4.5" fill="#e20cb7" stroke="#ffffff" stroke-width="1.5"/>
+                </svg>
+                <span>Cone</span>
+            </button>
+            <button class="zoomtoolbar-btn" title="Return" id="objects-toolbar-return-btn">
+                <svg width="30" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M9 19L5 15L9 11" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M5 15H15C17.7614 15 20 12.7614 20 10V9" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <span>Return</span>
-                    </svg>
-                    </button>
-                </div>
-            </div>
+                </svg>
+                <span>Return</span>
+            </button>
+        </div>
+
+        <!-- Zoom toolbar -->
+        <div class="toolbar-main-class zoomtoolbar-hidden" id="zoomtoolbar-main-id">
+            <button id="toolbar-main-zoom-in-btn" class="zoomtoolbar-btn" title="Zoom In">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="10.5" cy="10.5" r="7.5" stroke="#e20cb7" stroke-width="2"/>
+                    <line x1="16" y1="16" x2="22" y2="22" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="10.5" y1="7.5" x2="10.5" y2="13.5" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="7.5" y1="10.5" x2="13.5" y2="10.5" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span>Zoom In</span>
+            </button>
+            <button id="toolbar-main-zoom-out-btn" class="zoomtoolbar-btn" title="Zoom Out">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="10.5" cy="10.5" r="7.5" stroke="#e20cb7" stroke-width="2"/>
+                    <line x1="16" y1="16" x2="22" y2="22" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="7.5" y1="10.5" x2="13.5" y2="10.5" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span>Zoom Out</span>
+            </button>
+            <button id="toolbar-main-zoom-default-btn" class="zoomtoolbar-btn" title="Reset Zoom">
+                <svg width="25" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="3" stroke="#e20cb7" stroke-width="2"/>
+                    <circle cx="12" cy="12" r="9" stroke="#e20cb7" stroke-width="2" stroke-dasharray="3 3"/>
+                    <path d="M12 3V1" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M12 21V19" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M3 12H1" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M21 12H19" stroke="#e20cb7" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span>Reset Zoom</span>
+            </button>
+            <button id="toolbar-main-pan-btn" class="zoomtoolbar-btn" title="Pan Mode" aria-pressed="false">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 11V6C18 4.89543 17.1046 4 16 4C14.8954 4 14 4.89543 14 6V11" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M14 9.5V5C14 3.89543 13.1046 3 12 3C10.8954 3 10 3.89543 10 5V11.5" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M10 10.5V7C10 5.89543 9.10457 5 8 5C6.89543 5 6 5.89543 6 7V13.5C6 16.5376 8.46243 19 11.5 19H12.5C15.5376 19 18 16.5376 18 13.5V13" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Pan</span>
+            </button>
+            <button class="zoomtoolbar-btn" title="Return" id="zoom-toolbar-return-btn">
+                <svg width="30" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 19L5 15L9 11" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M5 15H15C17.7614 15 20 12.7614 20 10V9" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Return</span>
+            </button>
+        </div>
+
+        <!-- History toolbar -->
+        <div class="toolbar-main-class historytoolbar-hidden" id="historytoolbar-main-id">
+            <button id="toolbar-main-redo-btn" class="historytoolbar-btn" title="Redo">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15 5H17C18.6569 5 20 6.34315 20 8V16C20 17.6569 18.6569 19 17 19H7C5.34315 19 4 17.6569 4 16V8C4 6.34315 5.34315 5 7 5H9" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+                    <path d="M16 9L19 5L22 9" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+                </svg>
+                <span>Redo Action</span>
+            </button>
+            <button id="toolbar-main-undo-btn" class="historytoolbar-btn" title="Undo">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 5H7C5.34315 5 4 6.34315 4 8V16C4 17.6569 5.34315 19 7 19H17C18.6569 19 20 17.6569 20 16V8C20 6.34315 18.6569 5 17 5H15" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M8 9L5 5L2 9" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Undo Action</span>
+            </button>
+            <button class="historytoolbar-btn" title="Return" id="history-toolbar-return-btn">
+                <svg width="30" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 19L5 15L9 11" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M5 15H15C17.7614 15 20 12.7614 20 10V9" stroke="#e20cb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Return</span>
+            </button>
+        </div>
+    </div>
 
         <script type="text/javascript" src="js/paper/paper-full.js"></script>
         <script type="module" src="js/main.js"></script>
