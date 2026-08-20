@@ -5,12 +5,14 @@ export class NoteManager {
         this.saveState = saveStateCallback || (() => {});
         this.tool = new window.paper.Tool();
         this.draggedNote = null;
+        this.hasMoved = false;
 
         this._initListeners();
     }
 
     _initListeners() {
         this.tool.onMouseDown = (event) => {
+            this.hasMoved = false;
             // Filter the hitTest to ONLY match notes, letting clicks pass through the grid
             var hitResult = window.paper.project.hitTest(event.point, { 
                 fill: true, 
@@ -24,16 +26,30 @@ export class NoteManager {
             
             if (hitResult && hitResult.item) {
                 var target = hitResult.item;
-                
                 if (target.data && target.data.isNote) {
                     this.draggedNote = target;
                 } else if (target.parent && target.parent.data && target.parent.data.isNote) {
                     this.draggedNote = target.parent;
                 }
             } else {
+                this.draggedNote = null;
+            }
+        };
+
+        this.tool.onMouseDrag = (event) => {
+            this.hasMoved = true;
+            if (this.draggedNote) {
+                this.draggedNote.position = this.draggedNote.position.add(event.delta);
+            }
+        };
+
+        this.tool.onMouseUp = (event) => {
+            if (this.draggedNote) {
+                this.saveState();
+                this.draggedNote = null;
+            } else if (!this.hasMoved) {
                 var labelText = prompt("Note text:", "Note");
                 
-                // Added check to ensure user didn't click Cancel (which returns null)
                 if (labelText !== null && labelText.trim() !== "") {
                     var text = new window.paper.PointText({
                         point: [0, 0],
@@ -63,23 +79,8 @@ export class NoteManager {
                     noteGroup.data.isNote = true;
                     noteGroup.position = event.point;
 
-                    this.draggedNote = noteGroup; 
-
                     this.saveState();
                 }
-            }
-        };
-
-        this.tool.onMouseDrag = (event) => {
-            if (this.draggedNote) {
-                this.draggedNote.position = this.draggedNote.position.add(event.delta);
-            }
-        };
-
-        this.tool.onMouseUp = () => {
-            if (this.draggedNote) {
-                this.saveState();
-                this.draggedNote = null;
             }
         };
     }

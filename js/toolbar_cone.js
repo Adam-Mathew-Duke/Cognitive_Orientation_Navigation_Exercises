@@ -6,6 +6,7 @@ export class ConeManager {
         this.gridManager = gridManager;
         this.tool = new window.paper.Tool();
         this.draggedCone = null;
+        this.hasMoved = false;
         this.gridSpacing = gridManager ? gridManager.spacing : 40;
         
         this._initListeners();
@@ -20,6 +21,7 @@ export class ConeManager {
 
     _initListeners() {
         this.tool.onMouseDown = (event) => {
+            this.hasMoved = false;
             var hitResult = window.paper.project.hitTest(event.point, { 
                 fill: true, 
                 stroke: true, 
@@ -38,7 +40,6 @@ export class ConeManager {
             
             if (hitResult && hitResult.item) {
                 var target = hitResult.item;
-                
                 if (target.data && target.data.isCone) {
                     this.draggedCone = target;
                 } else if (target.parent && target.parent.data && target.parent.data.isCone) {
@@ -47,6 +48,23 @@ export class ConeManager {
                     this.draggedCone = null; 
                 }
             } else {
+                this.draggedCone = null;
+            }
+        };
+
+        this.tool.onMouseDrag = (event) => {
+            this.hasMoved = true;
+            if (this.draggedCone) {
+                this.draggedCone.position = this.draggedCone.position.add(event.delta);
+            }
+        };
+
+        this.tool.onMouseUp = (event) => {
+            if (this.draggedCone) {
+                this.draggedCone.position = this._snapToGrid(this.draggedCone.position);
+                this.saveState();
+                this.draggedCone = null;
+            } else if (!this.hasMoved) {
                 // SNAPPED POSITION FOR NEW CONE
                 var snappedPoint = this._snapToGrid(event.point);
 
@@ -70,20 +88,6 @@ export class ConeManager {
                 coneGroup.data.isCone = true;
 
                 this.saveState();
-            }
-        };
-
-        this.tool.onMouseDrag = (event) => {
-            if (this.draggedCone) {
-                this.draggedCone.position = this.draggedCone.position.add(event.delta);
-            }
-        };
-
-        this.tool.onMouseUp = () => {
-            if (this.draggedCone) {
-                this.draggedCone.position = this._snapToGrid(this.draggedCone.position);
-                this.saveState();
-                this.draggedCone = null;
             }
         };
     }
