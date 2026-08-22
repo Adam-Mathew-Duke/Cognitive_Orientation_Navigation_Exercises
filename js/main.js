@@ -68,55 +68,63 @@ window.onload = function() {
         }
     });
 
-    // --- ROBUST TOUCH-TO-PAPER.JS BRIDGE ---
-    canvas.addEventListener('touchstart', handleTouch, { passive: false });
-    canvas.addEventListener('touchmove', handleTouch, { passive: false });
-    canvas.addEventListener('touchend', handleTouch, { passive: false });
-
-    function handleTouch(e) {
+    // --- NATIVE POINTER EVENT BRIDGE FOR MOBILE/TOUCH ---
+    canvas.addEventListener('pointerdown', (e) => {
         if (!window.paper.tool) return;
-        
-        const touch = e.changedTouches[0];
-        if (!touch) return;
-
         const rect = canvas.getBoundingClientRect();
-        const x = touch.clientX - rect.left;
-        const y = touch.clientY - rect.top;
-
-        // Map client coordinates to Paper.js project view coordinates
-        const point = window.paper.view.viewToProject(new window.paper.Point(x, y));
+        const point = window.paper.view.viewToProject(new window.paper.Point(e.clientX - rect.left, e.clientY - rect.top));
         
-        // Construct a clean Paper-compatible event object
+        const event = {
+            point: point,
+            downPoint: point,
+            delta: new window.paper.Point(0, 0),
+            modifiers: { shift: e.shiftKey, alt: e.altKey, control: e.ctrlKey, meta: e.metaKey },
+            stop: () => e.stopPropagation(),
+            stopPropagation: () => e.stopPropagation(),
+            preventDefault: () => e.preventDefault()
+        };
+
+        window.paper.tool._downPoint = point;
+        if (window.paper.tool.onMouseDown) window.paper.tool.onMouseDown(event);
+    });
+
+    canvas.addEventListener('pointermove', (e) => {
+        if (!window.paper.tool || e.buttons === 0) return; // Only trigger on drag/movement while pressed
+        const rect = canvas.getBoundingClientRect();
+        const point = window.paper.view.viewToProject(new window.paper.Point(e.clientX - rect.left, e.clientY - rect.top));
+        
+        const event = {
+            point: point,
+            downPoint: window.paper.tool._downPoint || point,
+            delta: new window.paper.Point(e.movementX || 0, e.movementY || 0),
+            modifiers: { shift: e.shiftKey, alt: e.altKey, control: e.ctrlKey, meta: e.metaKey },
+            stop: () => e.stopPropagation(),
+            stopPropagation: () => e.stopPropagation(),
+            preventDefault: () => e.preventDefault()
+        };
+
+        if (window.paper.tool.onMouseDrag) window.paper.tool.onMouseDrag(event);
+    });
+
+    canvas.addEventListener('pointerup', (e) => {
+        if (!window.paper.tool) return;
+        const rect = canvas.getBoundingClientRect();
+        const point = window.paper.view.viewToProject(new window.paper.Point(e.clientX - rect.left, e.clientY - rect.top));
+        
         const event = {
             point: point,
             downPoint: window.paper.tool._downPoint || point,
             delta: new window.paper.Point(0, 0),
             modifiers: { shift: e.shiftKey, alt: e.altKey, control: e.ctrlKey, meta: e.metaKey },
-            stop: function() { e.stopPropagation(); },
-            stopPropagation: function() { e.stopPropagation(); },
-            preventDefault: function() { e.preventDefault(); }
+            stop: () => e.stopPropagation(),
+            stopPropagation: () => e.stopPropagation(),
+            preventDefault: () => e.preventDefault()
         };
 
-        if (e.type === 'touchstart') {
-            window.paper.tool._downPoint = point;
-            if (window.paper.tool.onMouseDown) {
-                window.paper.tool.onMouseDown(event);
-            }
-            e.preventDefault();
-        } else if (e.type === 'touchmove') {
-            if (window.paper.tool.onMouseDrag) {
-                window.paper.tool.onMouseDrag(event);
-            }
-            e.preventDefault();
-        } else if (e.type === 'touchend') {
-            if (window.paper.tool.onMouseUp) {
-                window.paper.tool.onMouseUp(event);
-            }
-            window.paper.tool._downPoint = null;
-            e.preventDefault();
-        }
-    }
-    // ---------------------------------------
+        if (window.paper.tool.onMouseUp) window.paper.tool.onMouseUp(event);
+        window.paper.tool._downPoint = null;
+    });
+    // ----------------------------------------------------
 
     gridManager.drawGrid();
 };
