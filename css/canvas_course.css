@@ -1,5 +1,7 @@
 /* --- Fix for Mobile / Touch Overlays Blocking Canvas --- */
 
+#courseCanvas { touch-action: none; }
+
 /* Ensure UI overlay containers don't block touch/pointer interactions with the canvas underneath */
 .toolbar-container-wrapper, 
 .ui-overlay, 
