@@ -1,5 +1,23 @@
 /* toolbar_main.css */
 
+/* --- Fix for Mobile / Touch Overlays Blocking Canvas --- */
+
+/* Ensure UI overlay containers don't block touch/pointer interactions with the canvas underneath */
+.toolbar-container-wrapper, 
+.ui-overlay, 
+.toolbar-sidebar {
+    pointer-events: none;
+}
+
+/* Re-enable pointer events specifically on interactive elements inside those wrappers so buttons still work */
+.toolbar-container-wrapper button, 
+.toolbar-sidebar button, 
+input, 
+select, 
+.interactive-element {
+    pointer-events: auto;
+}
+
 .toolbar-main-class{
     position: relative; /* Stays locked in the normal document flow so it never teleports */
     width: 100%;
