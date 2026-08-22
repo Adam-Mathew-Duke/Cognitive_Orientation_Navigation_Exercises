@@ -68,63 +68,36 @@ window.onload = function() {
         }
     });
 
-    // --- DIRECT TOOL INVOCATION BRIDGE FOR SPAWNING ITEMS ---
-    const triggerToolEvent = (type, e) => {
-        if (!window.paper.tool) return;
-        
-        const rect = canvas.getBoundingClientRect();
-        const clientX = e.clientX ?? (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
-        const clientY = e.clientY ?? (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
-        
-        const point = window.paper.view.viewToProject(new window.paper.Point(clientX - rect.left, clientY - rect.top));
+    // --- SIMPLE TOUCH-TO-MOUSE EVENT MAPPER ---
+    ['touchstart', 'touchmove', 'touchend'].forEach(eventType => {
+        canvas.addEventListener(eventType, (e) => {
+            const touch = e.changedTouches[0];
+            if (!touch) return;
 
-        if (type === 'down') {
-            window.paper.tool._downPoint = point;
-            if (typeof window.paper.tool.onMouseDown === 'function') {
-                window.paper.tool.onMouseDown({
-                    point: point,
-                    downPoint: point,
-                    delta: new window.paper.Point(0, 0),
-                    modifiers: { shift: e.shiftKey, alt: e.altKey, control: e.ctrlKey, meta: e.metaKey },
-                    stop: () => e.stopPropagation(),
-                    stopPropagation: () => e.stopPropagation(),
-                    preventDefault: () => e.preventDefault()
-                });
+            const mapType = {
+                touchstart: 'mousedown',
+                touchmove: 'mousemove',
+                touchend: 'mouseup'
+            };
+
+            const mouseEvent = new MouseEvent(mapType[eventType], {
+                bubbles: true,
+                cancelable: true,
+                view: window,
+                clientX: touch.clientX,
+                clientY: touch.clientY,
+                button: 0
+            });
+
+            touch.target.dispatchEvent(mouseEvent);
+            
+            // Prevent scrolling or simulated duplicate clicks while drawing/placing items
+            if (eventType !== 'touchend') {
+                e.preventDefault();
             }
-        } else if (type === 'up') {
-            if (typeof window.paper.tool.onMouseUp === 'function') {
-                window.paper.tool.onMouseUp({
-                    point: point,
-                    downPoint: window.paper.tool._downPoint || point,
-                    delta: new window.paper.Point(0, 0),
-                    modifiers: { shift: e.shiftKey, alt: e.altKey, control: e.ctrlKey, meta: e.metaKey },
-                    stop: () => e.stopPropagation(),
-                    stopPropagation: () => e.stopPropagation(),
-                    preventDefault: () => e.preventDefault()
-                });
-            }
-            window.paper.tool._downPoint = null;
-        }
-    };
-
-    canvas.addEventListener('pointerdown', (e) => {
-        triggerToolEvent('down', e);
-    }, { passive: false });
-
-    canvas.addEventListener('pointerup', (e) => {
-        triggerToolEvent('up', e);
-    }, { passive: false });
-
-    canvas.addEventListener('touchstart', (e) => {
-        e.preventDefault(); // Stop mobile mouse emulation delay/double-trigger
-        triggerToolEvent('down', e);
-    }, { passive: false });
-
-    canvas.addEventListener('touchend', (e) => {
-        e.preventDefault();
-        triggerToolEvent('up', e);
-    }, { passive: false });
-    // -------------------------------------------------------
+        }, { passive: false });
+    });
+    // ------------------------------------------
 
     gridManager.drawGrid();
 };
