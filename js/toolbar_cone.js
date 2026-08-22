@@ -25,7 +25,7 @@ export class ConeManager {
             var hitResult = window.paper.project.hitTest(event.point, { 
                 fill: true, 
                 stroke: true, 
-                tolerance: 15,
+                tolerance: 5,
                 match: (result) => {
                     // Instantly reject anything explicitly flagged as a grid line
                     if (result.item.data && result.item.data.isGrid) {
