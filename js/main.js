@@ -68,63 +68,63 @@ window.onload = function() {
         }
     });
 
-    // --- NATIVE POINTER EVENT BRIDGE FOR MOBILE/TOUCH ---
-    canvas.addEventListener('pointerdown', (e) => {
+    // --- DIRECT TOOL INVOCATION BRIDGE FOR SPAWNING ITEMS ---
+    const triggerToolEvent = (type, e) => {
         if (!window.paper.tool) return;
-        const rect = canvas.getBoundingClientRect();
-        const point = window.paper.view.viewToProject(new window.paper.Point(e.clientX - rect.left, e.clientY - rect.top));
         
-        const event = {
-            point: point,
-            downPoint: point,
-            delta: new window.paper.Point(0, 0),
-            modifiers: { shift: e.shiftKey, alt: e.altKey, control: e.ctrlKey, meta: e.metaKey },
-            stop: () => e.stopPropagation(),
-            stopPropagation: () => e.stopPropagation(),
-            preventDefault: () => e.preventDefault()
-        };
-
-        window.paper.tool._downPoint = point;
-        if (window.paper.tool.onMouseDown) window.paper.tool.onMouseDown(event);
-    });
-
-    canvas.addEventListener('pointermove', (e) => {
-        if (!window.paper.tool || e.buttons === 0) return; // Only trigger on drag/movement while pressed
         const rect = canvas.getBoundingClientRect();
-        const point = window.paper.view.viewToProject(new window.paper.Point(e.clientX - rect.left, e.clientY - rect.top));
+        const clientX = e.clientX ?? (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+        const clientY = e.clientY ?? (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
         
-        const event = {
-            point: point,
-            downPoint: window.paper.tool._downPoint || point,
-            delta: new window.paper.Point(e.movementX || 0, e.movementY || 0),
-            modifiers: { shift: e.shiftKey, alt: e.altKey, control: e.ctrlKey, meta: e.metaKey },
-            stop: () => e.stopPropagation(),
-            stopPropagation: () => e.stopPropagation(),
-            preventDefault: () => e.preventDefault()
-        };
+        const point = window.paper.view.viewToProject(new window.paper.Point(clientX - rect.left, clientY - rect.top));
 
-        if (window.paper.tool.onMouseDrag) window.paper.tool.onMouseDrag(event);
-    });
+        if (type === 'down') {
+            window.paper.tool._downPoint = point;
+            if (typeof window.paper.tool.onMouseDown === 'function') {
+                window.paper.tool.onMouseDown({
+                    point: point,
+                    downPoint: point,
+                    delta: new window.paper.Point(0, 0),
+                    modifiers: { shift: e.shiftKey, alt: e.altKey, control: e.ctrlKey, meta: e.metaKey },
+                    stop: () => e.stopPropagation(),
+                    stopPropagation: () => e.stopPropagation(),
+                    preventDefault: () => e.preventDefault()
+                });
+            }
+        } else if (type === 'up') {
+            if (typeof window.paper.tool.onMouseUp === 'function') {
+                window.paper.tool.onMouseUp({
+                    point: point,
+                    downPoint: window.paper.tool._downPoint || point,
+                    delta: new window.paper.Point(0, 0),
+                    modifiers: { shift: e.shiftKey, alt: e.altKey, control: e.ctrlKey, meta: e.metaKey },
+                    stop: () => e.stopPropagation(),
+                    stopPropagation: () => e.stopPropagation(),
+                    preventDefault: () => e.preventDefault()
+                });
+            }
+            window.paper.tool._downPoint = null;
+        }
+    };
+
+    canvas.addEventListener('pointerdown', (e) => {
+        triggerToolEvent('down', e);
+    }, { passive: false });
 
     canvas.addEventListener('pointerup', (e) => {
-        if (!window.paper.tool) return;
-        const rect = canvas.getBoundingClientRect();
-        const point = window.paper.view.viewToProject(new window.paper.Point(e.clientX - rect.left, e.clientY - rect.top));
-        
-        const event = {
-            point: point,
-            downPoint: window.paper.tool._downPoint || point,
-            delta: new window.paper.Point(0, 0),
-            modifiers: { shift: e.shiftKey, alt: e.altKey, control: e.ctrlKey, meta: e.metaKey },
-            stop: () => e.stopPropagation(),
-            stopPropagation: () => e.stopPropagation(),
-            preventDefault: () => e.preventDefault()
-        };
+        triggerToolEvent('up', e);
+    }, { passive: false });
 
-        if (window.paper.tool.onMouseUp) window.paper.tool.onMouseUp(event);
-        window.paper.tool._downPoint = null;
-    });
-    // ----------------------------------------------------
+    canvas.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // Stop mobile mouse emulation delay/double-trigger
+        triggerToolEvent('down', e);
+    }, { passive: false });
+
+    canvas.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        triggerToolEvent('up', e);
+    }, { passive: false });
+    // -------------------------------------------------------
 
     gridManager.drawGrid();
 };
