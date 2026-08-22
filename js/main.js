@@ -68,38 +68,55 @@ window.onload = function() {
         }
     });
 
-    // --- ADD THE TOUCH BRIDGE HERE ---
-    ['touchstart', 'touchmove', 'touchend'].forEach(type => {
-        canvas.addEventListener(type, (e) => {
-            const touch = e.changedTouches[0];
-            if (!touch) return;
+    // --- ROBUST TOUCH-TO-PAPER.JS BRIDGE ---
+    canvas.addEventListener('touchstart', handleTouch, { passive: false });
+    canvas.addEventListener('touchmove', handleTouch, { passive: false });
+    canvas.addEventListener('touchend', handleTouch, { passive: false });
 
-            const typeMap = {
-                touchstart: 'mousedown',
-                touchmove: 'mousedrag',
-                touchend: 'mouseup'
-            };
+    function handleTouch(e) {
+        if (!window.paper.tool) return;
+        
+        const touch = e.changedTouches[0];
+        if (!touch) return;
 
-            const mouseEventType = typeMap[type];
-            if (!mouseEventType) return;
+        const rect = canvas.getBoundingClientRect();
+        const x = touch.clientX - rect.left;
+        const y = touch.clientY - rect.top;
 
-            const simulatedEvent = new MouseEvent(mouseEventType, {
-                bubbles: true,
-                cancelable: true,
-                view: window,
-                clientX: touch.clientX,
-                clientY: touch.clientY,
-                button: 0
-            });
+        // Map client coordinates to Paper.js project view coordinates
+        const point = window.paper.view.viewToProject(new window.paper.Point(x, y));
+        
+        // Construct a clean Paper-compatible event object
+        const event = {
+            point: point,
+            downPoint: window.paper.tool._downPoint || point,
+            delta: new window.paper.Point(0, 0),
+            modifiers: { shift: e.shiftKey, alt: e.altKey, control: e.ctrlKey, meta: e.metaKey },
+            stop: function() { e.stopPropagation(); },
+            stopPropagation: function() { e.stopPropagation(); },
+            preventDefault: function() { e.preventDefault(); }
+        };
 
-            touch.target.dispatchEvent(simulatedEvent);
-            
-            if (type !== 'touchend') {
-                e.preventDefault();
+        if (e.type === 'touchstart') {
+            window.paper.tool._downPoint = point;
+            if (window.paper.tool.onMouseDown) {
+                window.paper.tool.onMouseDown(event);
             }
-        }, { passive: false });
-    });
-    // ---------------------------------
+            e.preventDefault();
+        } else if (e.type === 'touchmove') {
+            if (window.paper.tool.onMouseDrag) {
+                window.paper.tool.onMouseDrag(event);
+            }
+            e.preventDefault();
+        } else if (e.type === 'touchend') {
+            if (window.paper.tool.onMouseUp) {
+                window.paper.tool.onMouseUp(event);
+            }
+            window.paper.tool._downPoint = null;
+            e.preventDefault();
+        }
+    }
+    // ---------------------------------------
 
     gridManager.drawGrid();
 };
