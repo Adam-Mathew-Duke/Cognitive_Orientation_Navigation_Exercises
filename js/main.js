@@ -17,7 +17,8 @@ import { UIManager } from './ui_manager.js';
 import { GridManager } from './grid_manager.js';
 
 window.onload = function() {
-    window.paper.setup('courseCanvas');
+    const canvas = document.getElementById('courseCanvas');
+    window.paper.setup(canvas);
     
     const gridManager = new GridManager(window.paper.view, 40);
     const zoomManager = new ZoomManager(window.paper.view);
@@ -66,6 +67,14 @@ window.onload = function() {
             uiManager.updateHistoryButtons();
         }
     });
+
+    // Optional safety check: ensure touch events register cleanly on mobile viewports
+    canvas.addEventListener('touchstart', (e) => {
+        // If needed, prevent default scrolling behavior when interacting with tools
+        if (e.target === canvas) {
+            // e.preventDefault(); // Uncomment if page still scrolls while drawing paths
+        }
+    }, { passive: false });
 
     gridManager.drawGrid();
 };

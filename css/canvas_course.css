@@ -1,5 +1,7 @@
-canvas{
-    touch-action: none; /* Do not scroll around the webpage while drawing */
+#courseCanvas {
+    touch-action: none; /* Disables default pinch-zoom, panning, and scroll gestures on the canvas */
+    -webkit-user-select: none; /* Prevents text/element highlighting on mobile */
+    user-select: none;
 }
 
 canvas[resize]{
