@@ -25,7 +25,7 @@ export class ConeManager {
             var hitResult = window.paper.project.hitTest(event.point, { 
                 fill: true, 
                 stroke: true, 
-                tolerance: 5,
+                tolerance: 15,
                 match: (result) => {
                     // Instantly reject anything explicitly flagged as a grid line
                     if (result.item.data && result.item.data.isGrid) {
@@ -47,6 +47,11 @@ export class ConeManager {
                 } else {
                     this.draggedCone = null; 
                 }
+
+                // Scale the group using the .scale() method safely
+                if (this.draggedCone) {
+                    this.draggedCone.scale(1.15);
+                }
             } else {
                 this.draggedCone = null;
             }
@@ -61,6 +66,8 @@ export class ConeManager {
 
         this.tool.onMouseUp = (event) => {
             if (this.draggedCone) {
+                // Scale back down by the inverse factor to return to original size
+                this.draggedCone.scale(1 / 1.15);
                 this.draggedCone.position = this._snapToGrid(this.draggedCone.position);
                 this.saveState();
                 this.draggedCone = null;

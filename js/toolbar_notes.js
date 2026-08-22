@@ -17,7 +17,7 @@ export class NoteManager {
             var hitResult = window.paper.project.hitTest(event.point, { 
                 fill: true, 
                 stroke: true, 
-                tolerance: 5,
+                tolerance: 15,
                 match: (hit) => {
                     return (hit.item.data && hit.item.data.isNote) || 
                            (hit.item.parent && hit.item.parent.data && hit.item.parent.data.isNote);

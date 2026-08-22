@@ -44,8 +44,16 @@ export class UIManager {
             this.btnCap, this.btnStick, this.btnRock, this.btnHelmet, this.btnNote
         ];
         buttons.forEach(btn => {
-            if (btn && btn !== exceptBtn) btn.classList.remove('active');
+            if (btn && btn !== exceptBtn) {
+                btn.classList.remove('active');
+            }
         });
+
+        // Fallback: Aggressively strip 'active' from any element inside the object toolbar container when path is chosen
+        if (exceptBtn === this.btnPath) {
+            const objectToolbarElements = document.querySelectorAll('#objectstoolbar-main-id button');
+            objectToolbarElements.forEach(el => el.classList.remove('active'));
+        }
     }
 
     _initListeners() {
@@ -68,10 +76,20 @@ export class UIManager {
                 objectsToolbar.classList.toggle('objectstoolbar-hidden');
             });
         }
+        
         if (objectsReturnBtn && mainToolbar && objectsToolbar) {
             objectsReturnBtn.addEventListener('click', () => {
                 mainToolbar.classList.toggle('toolbar-hidden');
                 objectsToolbar.classList.toggle('objectstoolbar-hidden');
+                
+                // De-select all object buttons and reset the active tool
+                this._deactivateAllButtons();
+                if (this.emptyTool) {
+                    this.emptyTool.activate();
+                }
+                if (this.tooltip) {
+                    this.tooltip.innerText = "Tool deactivated.";
+                }
             });
         }
 

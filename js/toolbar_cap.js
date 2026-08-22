@@ -24,7 +24,7 @@ export class CapManager {
             var hitResult = window.paper.project.hitTest(event.point, { 
                 fill: true, 
                 stroke: true, 
-                tolerance: 5, 
+                tolerance: 15, 
                 match: (r) => !(r.item.data && r.item.data.isGrid) 
             });
 

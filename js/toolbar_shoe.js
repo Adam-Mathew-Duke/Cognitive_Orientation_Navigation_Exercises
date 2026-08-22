@@ -25,7 +25,7 @@ export class ShoeManager {
             var hitResult = window.paper.project.hitTest(event.point, { 
                 fill: true, 
                 stroke: true, 
-                tolerance: 5,
+                tolerance: 15,
                 match: (result) => {
                     if (result.item.data && result.item.data.isGrid) return false;
                     if (result.item.parent && result.item.parent.data && result.item.parent.data.isGrid) return false;
