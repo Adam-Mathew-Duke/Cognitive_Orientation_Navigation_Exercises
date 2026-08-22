@@ -1,5 +1,12 @@
 /* --- Fix for Mobile / Touch Overlays Blocking Canvas --- */
 
+/* --- Global Mobile Touch Lockout --- */
+html, body {
+    touch-action: none;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+}
+
 #courseCanvas { touch-action: none; }
 
 /* Ensure UI overlay containers don't block touch/pointer interactions with the canvas underneath */
