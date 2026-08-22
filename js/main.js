@@ -68,13 +68,38 @@ window.onload = function() {
         }
     });
 
-    // Optional safety check: ensure touch events register cleanly on mobile viewports
-    canvas.addEventListener('touchstart', (e) => {
-        // If needed, prevent default scrolling behavior when interacting with tools
-        if (e.target === canvas) {
-            // e.preventDefault(); // Uncomment if page still scrolls while drawing paths
-        }
-    }, { passive: false });
+    // --- ADD THE TOUCH BRIDGE HERE ---
+    ['touchstart', 'touchmove', 'touchend'].forEach(type => {
+        canvas.addEventListener(type, (e) => {
+            const touch = e.changedTouches[0];
+            if (!touch) return;
+
+            const typeMap = {
+                touchstart: 'mousedown',
+                touchmove: 'mousedrag',
+                touchend: 'mouseup'
+            };
+
+            const mouseEventType = typeMap[type];
+            if (!mouseEventType) return;
+
+            const simulatedEvent = new MouseEvent(mouseEventType, {
+                bubbles: true,
+                cancelable: true,
+                view: window,
+                clientX: touch.clientX,
+                clientY: touch.clientY,
+                button: 0
+            });
+
+            touch.target.dispatchEvent(simulatedEvent);
+            
+            if (type !== 'touchend') {
+                e.preventDefault();
+            }
+        }, { passive: false });
+    });
+    // ---------------------------------
 
     gridManager.drawGrid();
 };
