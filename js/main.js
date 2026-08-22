@@ -70,6 +70,7 @@ window.onload = function() {
 
     // --- NATIVE POINTER EVENT BRIDGE FOR MOBILE & TOUCH ---
     canvas.addEventListener('pointerdown', (e) => {
+        e.preventDefault(); // Stop mobile browser default touch panning/scrolling behavior
         if (!window.paper.tool) return;
         const rect = canvas.getBoundingClientRect();
         const point = window.paper.view.viewToProject(new window.paper.Point(e.clientX - rect.left, e.clientY - rect.top));
