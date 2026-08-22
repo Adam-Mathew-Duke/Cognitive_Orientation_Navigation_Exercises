@@ -7,6 +7,7 @@ export class TrafficConeManager {
         this.tool = new window.paper.Tool();
         this.draggedItem = null;
         this.hasMoved = false;
+        this.downPoint = null; // Track where the touch started
         this.gridSpacing = gridManager ? gridManager.spacing : 40;
         this._initListeners();
     }
@@ -21,6 +22,8 @@ export class TrafficConeManager {
     _initListeners() {
         this.tool.onMouseDown = (event) => {
             this.hasMoved = false;
+            this.downPoint = event.point; // Record starting point
+
             var hitResult = window.paper.project.hitTest(event.point, { 
                 fill: true, 
                 stroke: true, 
@@ -37,7 +40,11 @@ export class TrafficConeManager {
         };
 
         this.tool.onMouseDrag = (event) => {
-            this.hasMoved = true;
+            // Only count as moved if the pointer drags past a 5px threshold (prevents mobile jitter)
+            if (this.downPoint && event.point.getDistance(this.downPoint) > 5) {
+                this.hasMoved = true;
+            }
+
             if (this.draggedItem) {
                 this.draggedItem.position = this.draggedItem.position.add(event.delta);
             }
@@ -58,6 +65,7 @@ export class TrafficConeManager {
                 group.data.isTrafficCone = true;
                 this.saveState();
             }
+            this.downPoint = null;
         };
     }
 
